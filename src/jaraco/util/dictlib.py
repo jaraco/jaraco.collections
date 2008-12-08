@@ -3,7 +3,9 @@
 
 # $Id$
 
-import re, sets
+import re
+import sets
+import operator
 
 class NonDataProperty(object):
 	"""Much like the property builtin, but only implements __get__,
@@ -102,3 +104,81 @@ def DictMap(function, dictionary):
 	"""
 	return dict(zip(dictionary.keys(), map(function, dictionary.values())))
 
+class RangeMap(dict):
+	"""
+	A dictionary-like object that uses the keys as bounds for a range.
+	Inclusion of the value for that range is determined by the
+	keyMatchComparator, which defaults to less-than-or-equal.
+	A value is returned for a key if it is the first key that matches in
+	the sorted list of keys.
+	
+	One may supply keyword parameters to be passed to the sort function used
+	to sort keys (i.e. cmp [python 2 only], keys, reverse) as sortParams.
+
+	Let's create a map that maps 1-3 -> 'a', 4-6 -> 'b'
+	>>> r = RangeMap({3: 'a', 6: 'b'})  # boy, that was easy
+	>>> r[1], r[2], r[3], r[4], r[5], r[6]
+	('a', 'a', 'a', 'b', 'b', 'b')
+
+	But you'll notice that the way rangemap is defined, it must be open-ended on one side.
+	>>> r[0]
+	'a'
+	>>> r[-1]
+	'a'
+
+	One can close the open-end of the RangeMap by using RangeValueUndefined
+	>>> r = RangeMap({0: RangeValueUndefined(), 3: 'a', 6: 'b'})
+	>>> r[0]
+	Traceback (most recent call last):
+	  ...
+	KeyError: 0
+
+	One can get the first or last elements in the range by using RangeItem
+	>>> last_item = RangeItem(-1)
+	>>> r[last_item]
+	'b'
+
+	>>> r[RangeItemLast()]
+	'b'
+
+	>>> r.bounds()
+	(0, 6)
+	
+	"""
+	def __init__(self, source, sortParams = {}, keyMatchComparator = operator.le):
+		dict.__init__(self, source)
+		self.sort_params = sortParams
+		self.match = keyMatchComparator
+
+	def __getitem__(self, item):
+		sortedKeys = sorted(self.keys(), **self.sort_params)
+		if isinstance(item, RangeItem):
+			result = self.__getitem__(sortedKeys[item])
+		else:
+			key = self._find_first_match_(sortedKeys, item)
+			result = dict.__getitem__(self, key)
+			if isinstance(result, RangeValueUndefined): raise KeyError(key)
+		return result
+
+	def _find_first_match_(self, keys, item):
+		is_match = lambda k: self.match(item, k)
+		matches = list(filter(is_match, keys))
+		if matches:
+			return matches[0]
+		raise KeyError(item)
+
+	def bounds(self):
+		sortedKeys = sorted(self.keys(), **self.sort_params)
+		return sortedKeys[RangeItemFirst()], sortedKeys[RangeItemLast()]
+
+# some special valies for the RangeMap
+class RangeValueUndefined(object): pass
+class RangeItem(int):
+	def __new__(cls, value):
+		return int.__new__(cls, value)
+class RangeItemFirst(RangeItem):
+	def __new__(cls):
+		return RangeItem.__new__(cls, 0)
+class RangeItemLast(RangeItem):
+	def __new__(cls):
+		return RangeItem.__new__(cls, -1)
