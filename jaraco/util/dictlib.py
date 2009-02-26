@@ -4,7 +4,6 @@
 # $Id$
 
 import re
-import sets
 import operator
 
 class NonDataProperty(object):
@@ -55,17 +54,17 @@ class DictFilter(object):
 	"""
 	def __init__(self, dict, include_keys=[], include_pattern=None):
 		self.dict = dict
-		self.specified_keys = sets.Set(include_keys)
+		self.specified_keys = set(include_keys)
 		if include_pattern is not None:
 			self.include_pattern = re.compile(include_pattern)
 		else:
 			# for performance, replace the pattern_keys property
-			self.pattern_keys = sets.Set()
+			self.pattern_keys = set()
 
 	def get_pattern_keys(self):
 		#key_matches = lambda k, v: self.include_pattern.match(k)
 		keys = filter(self.include_pattern.match, self.dict.keys())
-		return sets.Set(keys)
+		return set(keys)
 	pattern_keys = NonDataProperty(get_pattern_keys)
 
 	@property
