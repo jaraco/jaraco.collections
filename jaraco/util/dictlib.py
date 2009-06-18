@@ -15,7 +15,7 @@ class NonDataProperty(object):
 	
 	def __init__(self, fget):
 		assert fget is not None, "fget cannot be none"
-		# todo, make sure fget is callable
+		assert callable(fget), "fget must be callable"
 		self.fget = fget
 		
 	def __get__(self, obj, objtype=None):
@@ -89,15 +89,19 @@ class DictFilter(object):
 		values = map(self.dict.get, keys)
 		return zip(keys, values)
 
-	def __cmp__(myself, yourself):
-		return cmp(dict(myself), yourself)
+	def __eq__(self, other):
+		return dict(self) == other
 
-# DictMap is much like the built-in function map.  It takes a dictionary
-#  and applys a function to the values of that dictionary, returning a
-#  new dictionary with the mapped values in the original keys.
-def DictMap(function, dictionary):
+	def __ne__(self, other):
+		return dict(self) != other
+
+def dict_map(function, dictionary):
 	"""
-	>>> d = DictMap(lambda x:x+1, dict(a=1, b=2))
+	dict_map is much like the built-in function map.  It takes a dictionary
+	and applys a function to the values of that dictionary, returning a
+	new dictionary with the mapped values in the original keys.
+	
+	>>> d = dict_map(lambda x:x+1, dict(a=1, b=2))
 	>>> d == dict(a=2,b=3)
 	True
 	"""
@@ -119,6 +123,11 @@ class RangeMap(dict):
 	>>> r[1], r[2], r[3], r[4], r[5], r[6]
 	('a', 'a', 'a', 'b', 'b', 'b')
 
+	Even float values should work so long as the comparison operator
+	supports it.
+	>>> r[4.5]
+	'b'
+
 	But you'll notice that the way rangemap is defined, it must be open-ended on one side.
 	>>> r[0]
 	'a'
@@ -126,20 +135,22 @@ class RangeMap(dict):
 	'a'
 
 	One can close the open-end of the RangeMap by using RangeValueUndefined
-	>>> r = RangeMap({0: RangeValueUndefined(), 3: 'a', 6: 'b'})
+	>>> r = RangeMap({0: RangeMap.UndefinedValue, 3: 'a', 6: 'b'})
 	>>> r[0]
 	Traceback (most recent call last):
 	  ...
 	KeyError: 0
 
 	One can get the first or last elements in the range by using RangeItem
-	>>> last_item = RangeItem(-1)
+	>>> last_item = RangeMap.Item(-1)
 	>>> r[last_item]
 	'b'
 
-	>>> r[RangeItemLast()]
+	LastItem is a shortcut for Item(-1)
+	>>> r[RangeMap.LastItem]
 	'b'
 
+	Sometimes it's useful to find the bounds for a RangeMap
 	>>> r.bounds()
 	(0, 6)
 	
@@ -151,12 +162,13 @@ class RangeMap(dict):
 
 	def __getitem__(self, item):
 		sortedKeys = sorted(self.keys(), **self.sort_params)
-		if isinstance(item, RangeItem):
+		if isinstance(item, RangeMap.Item):
 			result = self.__getitem__(sortedKeys[item])
 		else:
 			key = self._find_first_match_(sortedKeys, item)
 			result = dict.__getitem__(self, key)
-			if isinstance(result, RangeValueUndefined): raise KeyError(key)
+			if result is RangeMap.UndefinedValue:
+				raise KeyError(key)
 		return result
 
 	def _find_first_match_(self, keys, item):
@@ -168,16 +180,13 @@ class RangeMap(dict):
 
 	def bounds(self):
 		sortedKeys = sorted(self.keys(), **self.sort_params)
-		return sortedKeys[RangeItemFirst()], sortedKeys[RangeItemLast()]
+		return (
+			sortedKeys[RangeMap.FirstItem],
+			sortedKeys[RangeMap.LastItem],
+			)
 
-# some special valies for the RangeMap
-class RangeValueUndefined(object): pass
-class RangeItem(int):
-	def __new__(cls, value):
-		return int.__new__(cls, value)
-class RangeItemFirst(RangeItem):
-	def __new__(cls):
-		return RangeItem.__new__(cls, 0)
-class RangeItemLast(RangeItem):
-	def __new__(cls):
-		return RangeItem.__new__(cls, -1)
+	# some special values for the RangeMap
+	UndefinedValue = type('RangeValueUndefined', (object,), {})()
+	class Item(int): pass
+	FirstItem = Item(0)
+	LastItem = Item(-1)
