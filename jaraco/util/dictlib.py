@@ -190,3 +190,24 @@ class RangeMap(dict):
 	class Item(int): pass
 	FirstItem = Item(0)
 	LastItem = Item(-1)
+
+__identity = lambda x: x
+
+def sorted_items(d, key=__identity, reverse=False):
+	"""
+	Return the items of the dictionary sorted by the keys
+	
+	>>> sample = dict(foo=20, bar=42, baz=10)
+	>>> tuple(sorted_items(sample))
+	(('bar', 42), ('baz', 10), ('foo', 20))
+	
+	>>> reverse_string = lambda s: ''.join(reversed(s))
+	>>> tuple(sorted_items(sample, key=reverse_string))
+	(('foo', 20), ('bar', 42), ('baz', 10))
+	
+	>>> tuple(sorted_items(sample, reverse=True))
+	(('foo', 20), ('baz', 10), ('bar', 42))
+	"""
+	# wrap the key func so it operates on the first element of each item
+	pairkey_key = lambda item: key(item[0])
+	return sorted(d.items(), key=pairkey_key, reverse=reverse)
