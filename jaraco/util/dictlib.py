@@ -5,6 +5,7 @@
 
 import re
 import operator
+from jaraco.util import callable
 
 class NonDataProperty(object):
 	"""Much like the property builtin, but only implements __get__,
