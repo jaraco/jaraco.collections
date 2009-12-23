@@ -212,3 +212,39 @@ def sorted_items(d, key=__identity, reverse=False):
 	# wrap the key func so it operates on the first element of each item
 	pairkey_key = lambda item: key(item[0])
 	return sorted(d.items(), key=pairkey_key, reverse=reverse)
+
+# kept for backward compatibility
+from .string import FoldedCase
+
+class FoldedCaseKeyedDict(dict):
+	"""A case-insensitive dictionary (keys are compared as insensitive
+	if they are strings.
+	>>> d = FoldedCaseKeyedDict()
+	>>> d['heLlo'] = 'world'
+	>>> d
+	{'heLlo': 'world'}
+	>>> d['hello']
+	'world'
+	>>> FoldedCaseKeyedDict({'heLlo': 'world'})
+	{'heLlo': 'world'}
+	>>> d = FoldedCaseKeyedDict({'heLlo': 'world'})
+	>>> d['hello']
+	'world'
+	>>> d
+	{'heLlo': 'world'}
+	>>> d = FoldedCaseKeyedDict({'heLlo': 'world', 'Hello': 'world'})
+	>>> d
+	{'heLlo': 'world'}
+	"""
+	def __setitem__(self, key, val):
+		if isinstance(key, basestring):
+			key = FoldedCase(key)
+		dict.__setitem__(self, key, val)
+
+	def __init__(self, *args, **kargs):
+		super(FoldedCaseKeyedDict, self).__init__()
+		# build a dictionary using the default constructs
+		d = dict(*args, **kargs)
+		# build this dictionary using case insensitivity.
+		for item in d.items():
+			self.__setitem__(*item)
