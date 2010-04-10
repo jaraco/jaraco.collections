@@ -6,6 +6,7 @@
 import re
 import operator
 from jaraco.util import callable
+import jaraco.util.string
 
 class NonDataProperty(object):
 	"""Much like the property builtin, but only implements __get__,
@@ -213,12 +214,9 @@ def sorted_items(d, key=__identity, reverse=False):
 	pairkey_key = lambda item: key(item[0])
 	return sorted(d.items(), key=pairkey_key, reverse=reverse)
 
-# kept for backward compatibility
-from .string import FoldedCase
-
 class FoldedCaseKeyedDict(dict):
 	"""A case-insensitive dictionary (keys are compared as insensitive
-	if they are strings.
+	if they are strings).
 	>>> d = FoldedCaseKeyedDict()
 	>>> d['heLlo'] = 'world'
 	>>> d
@@ -238,7 +236,7 @@ class FoldedCaseKeyedDict(dict):
 	"""
 	def __setitem__(self, key, val):
 		if isinstance(key, basestring):
-			key = FoldedCase(key)
+			key = jaraco.util.string.FoldedCase(key)
 		dict.__setitem__(self, key, val)
 
 	def __init__(self, *args, **kargs):
