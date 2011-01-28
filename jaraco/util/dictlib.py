@@ -246,3 +246,16 @@ class FoldedCaseKeyedDict(dict):
 		# build this dictionary using case insensitivity.
 		for item in d.items():
 			self.__setitem__(*item)
+
+class DictAdapter(object):
+	"""
+	Provide a getitem interface for attributes of an object
+	>>> import string
+	>>> "%(lowercase)s" % DictAdapter(string)
+	'abcdefghijklmnopqrstuvwxyz'
+	"""
+	def __init__(self, object):
+		self.object = object
+
+	def __getitem__(self, name):
+		return getattr(self.object, name)
