@@ -1,7 +1,6 @@
-#!python
 # -*- coding: utf-8 -*-
 
-# $Id$
+from __future__ import absolute_import
 
 import re
 import operator
@@ -254,8 +253,36 @@ class DictAdapter(object):
 	>>> "%(lowercase)s" % DictAdapter(string)
 	'abcdefghijklmnopqrstuvwxyz'
 	"""
-	def __init__(self, object):
-		self.object = object
+	def __init__(self, wrapped_ob):
+		self.object = wrapped_ob
 
 	def __getitem__(self, name):
 		return getattr(self.object, name)
+
+class ItemsAsAttributes(object):
+	"""
+	Mix-in class to enable a mapping object to provide items as
+	attributes.
+	
+	>>> C = type('C', (dict, ItemsAsAttributes), dict())
+	>>> i = C()
+	>>> i['foo'] = 'bar'
+	>>> i.foo
+	'bar'
+
+	# natural attribute access takes precedence
+	>>> i.foo = 'henry'
+	>>> i.foo
+	'henry'
+
+	# but as you might expect, the mapping functionality is preserved.
+	>>> i['foo']
+	'bar'
+	"""
+	def __getattr__(self, key):
+		try:
+			return super(ItemsAsAttributes, self).__getattr__(key)
+		except AttributeError:
+			if key in self:
+				return self[key]
+			raise
