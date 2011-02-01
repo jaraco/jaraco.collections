@@ -278,11 +278,22 @@ class ItemsAsAttributes(object):
 	# but as you might expect, the mapping functionality is preserved.
 	>>> i['foo']
 	'bar'
+	
+	# A normal attribute error should be raised if an attribute is
+	#  requested that doesn't exist.
+	>>> i.missing
+	Traceback (most recent call last):
+	...
+	AttributeError: 'C' object has no attribute 'missing'
 	"""
 	def __getattr__(self, key):
 		try:
-			return super(ItemsAsAttributes, self).__getattr__(key)
-		except AttributeError:
+			return getattr(super(ItemsAsAttributes, self), key)
+		except AttributeError as e:
 			if key in self:
 				return self[key]
+			e.message = e.message.replace('super',
+				self.__class__.__name__, 1)
+			e.args = (e.message,)
 			raise
+
