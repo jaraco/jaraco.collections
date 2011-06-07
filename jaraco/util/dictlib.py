@@ -113,12 +113,12 @@ class RangeMap(dict):
 	"""
 	A dictionary-like object that uses the keys as bounds for a range.
 	Inclusion of the value for that range is determined by the
-	keyMatchComparator, which defaults to less-than-or-equal.
+	key_match_comparator, which defaults to less-than-or-equal.
 	A value is returned for a key if it is the first key that matches in
 	the sorted list of keys.
 	
 	One may supply keyword parameters to be passed to the sort function used
-	to sort keys (i.e. cmp [python 2 only], keys, reverse) as sortParams.
+	to sort keys (i.e. cmp [python 2 only], keys, reverse) as sort_params.
 
 	Let's create a map that maps 1-3 -> 'a', 4-6 -> 'b'
 	>>> r = RangeMap({3: 'a', 6: 'b'})  # boy, that was easy
@@ -136,20 +136,20 @@ class RangeMap(dict):
 	>>> r[-1]
 	'a'
 
-	One can close the open-end of the RangeMap by using RangeValueUndefined
-	>>> r = RangeMap({0: RangeMap.UndefinedValue, 3: 'a', 6: 'b'})
+	One can close the open-end of the RangeMap by using undefined_value
+	>>> r = RangeMap({0: RangeMap.undefined_value, 3: 'a', 6: 'b'})
 	>>> r[0]
 	Traceback (most recent call last):
 	  ...
 	KeyError: 0
 
-	One can get the first or last elements in the range by using RangeItem
+	One can get the first or last elements in the range by using RangeMap.Item
 	>>> last_item = RangeMap.Item(-1)
 	>>> r[last_item]
 	'b'
 
-	LastItem is a shortcut for Item(-1)
-	>>> r[RangeMap.LastItem]
+	.last_item is a shortcut for Item(-1)
+	>>> r[RangeMap.last_item]
 	'b'
 
 	Sometimes it's useful to find the bounds for a RangeMap
@@ -157,19 +157,19 @@ class RangeMap(dict):
 	(0, 6)
 	
 	"""
-	def __init__(self, source, sortParams = {}, keyMatchComparator = operator.le):
+	def __init__(self, source, sort_params = {}, key_match_comparator = operator.le):
 		dict.__init__(self, source)
-		self.sort_params = sortParams
-		self.match = keyMatchComparator
+		self.sort_params = sort_params
+		self.match = key_match_comparator
 
 	def __getitem__(self, item):
-		sortedKeys = sorted(self.keys(), **self.sort_params)
+		sorted_keys = sorted(self.keys(), **self.sort_params)
 		if isinstance(item, RangeMap.Item):
-			result = self.__getitem__(sortedKeys[item])
+			result = self.__getitem__(sorted_keys[item])
 		else:
-			key = self._find_first_match_(sortedKeys, item)
+			key = self._find_first_match_(sorted_keys, item)
 			result = dict.__getitem__(self, key)
-			if result is RangeMap.UndefinedValue:
+			if result is RangeMap.undefined_value:
 				raise KeyError(key)
 		return result
 
@@ -181,17 +181,17 @@ class RangeMap(dict):
 		raise KeyError(item)
 
 	def bounds(self):
-		sortedKeys = sorted(self.keys(), **self.sort_params)
+		sorted_keys = sorted(self.keys(), **self.sort_params)
 		return (
-			sortedKeys[RangeMap.FirstItem],
-			sortedKeys[RangeMap.LastItem],
-			)
+			sorted_keys[RangeMap.first_item],
+			sorted_keys[RangeMap.last_item],
+		)
 
 	# some special values for the RangeMap
-	UndefinedValue = type('RangeValueUndefined', (object,), {})()
+	undefined_value = type('RangeValueUndefined', (object,), {})()
 	class Item(int): pass
-	FirstItem = Item(0)
-	LastItem = Item(-1)
+	first_item = Item(0)
+	last_item = Item(-1)
 
 __identity = lambda x: x
 
