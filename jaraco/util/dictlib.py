@@ -119,7 +119,7 @@ def dict_map(function, dictionary):
 	>>> d == dict(a=2,b=3)
 	True
 	"""
-	return dict(zip(dictionary.keys(), map(function, dictionary.values())))
+	return dict((key, function(value)) for key, value in dictionary.items())
 
 class RangeMap(dict):
 	"""
@@ -261,10 +261,14 @@ class FoldedCaseKeyedDict(dict):
 
 class DictAdapter(object):
 	"""
-	Provide a getitem interface for attributes of an object
+	Provide a getitem interface for attributes of an object.
+
+	Let's say you want to get at the string.lowercase property in a formatted
+	string. It's easy with DictAdapter.
+
 	>>> import string
-	>>> "%(lowercase)s" % DictAdapter(string)
-	'abcdefghijklmnopqrstuvwxyz'
+	>>> "lowercase is %(lowercase)s" % DictAdapter(string)
+	'lowercase is abcdefghijklmnopqrstuvwxyz'
 	"""
 	def __init__(self, wrapped_ob):
 		self.object = wrapped_ob
