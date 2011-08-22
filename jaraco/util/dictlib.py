@@ -11,15 +11,27 @@ import jaraco.util.string
 class NonDataProperty(object):
 	"""Much like the property builtin, but only implements __get__,
 	making it a non-data property, and can be subsequently reset.
-	
+
 	See http://users.rcn.com/python/download/Descriptor.htm for more
-	information."""
-	
+	information.
+
+	>>> class X(object):
+	...   @NonDataProperty
+	...   def foo(self):
+	...     return 3
+	>>> x = X()
+	>>> x.foo
+	3
+	>>> x.foo = 4
+	>>> x.foo
+	4
+	"""
+
 	def __init__(self, fget):
 		assert fget is not None, "fget cannot be none"
 		assert callable(fget), "fget must be callable"
 		self.fget = fget
-		
+
 	def __get__(self, obj, objtype=None):
 		if obj is None:
 			return self
@@ -28,31 +40,31 @@ class NonDataProperty(object):
 class DictFilter(object):
 	"""
 	Takes a dict, and simulates a sub-dict based on the keys.
-	
+
 	>>> sample = {'a': 1, 'b': 2, 'c': 3}
 	>>> filtered = DictFilter(sample, ['a', 'c'])
 	>>> filtered == {'a': 1, 'c': 3}
 	True
-	
+
 	One can also filter by a regular expression pattern
-	
+
 	>>> sample['d'] = 4
 	>>> sample['ef'] = 5
-	
+
 	Here we filter for only single-character keys
-	
+
 	>>> filtered = DictFilter(sample, include_pattern='.$')
 	>>> filtered == {'a': 1, 'b': 2, 'c': 3, 'd': 4}
 	True
-	
+
 	Also note that DictFilter keeps a reference to the original dict, so
 	if you modify the original dict, that could modify the filtered dict.
-	
+
 	>>> del sample['d']
 	>>> del sample['a']
 	>>> filtered == {'b': 2, 'c': 3}
 	True
-	
+
 	"""
 	def __init__(self, dict, include_keys=[], include_pattern=None):
 		self.dict = dict
@@ -102,7 +114,7 @@ def dict_map(function, dictionary):
 	dict_map is much like the built-in function map.  It takes a dictionary
 	and applys a function to the values of that dictionary, returning a
 	new dictionary with the mapped values in the original keys.
-	
+
 	>>> d = dict_map(lambda x:x+1, dict(a=1, b=2))
 	>>> d == dict(a=2,b=3)
 	True
@@ -116,7 +128,7 @@ class RangeMap(dict):
 	key_match_comparator, which defaults to less-than-or-equal.
 	A value is returned for a key if it is the first key that matches in
 	the sorted list of keys.
-	
+
 	One may supply keyword parameters to be passed to the sort function used
 	to sort keys (i.e. cmp [python 2 only], keys, reverse) as sort_params.
 
@@ -155,7 +167,7 @@ class RangeMap(dict):
 	Sometimes it's useful to find the bounds for a RangeMap
 	>>> r.bounds()
 	(0, 6)
-	
+
 	"""
 	def __init__(self, source, sort_params = {}, key_match_comparator = operator.le):
 		dict.__init__(self, source)
@@ -198,15 +210,15 @@ __identity = lambda x: x
 def sorted_items(d, key=__identity, reverse=False):
 	"""
 	Return the items of the dictionary sorted by the keys
-	
+
 	>>> sample = dict(foo=20, bar=42, baz=10)
 	>>> tuple(sorted_items(sample))
 	(('bar', 42), ('baz', 10), ('foo', 20))
-	
+
 	>>> reverse_string = lambda s: ''.join(reversed(s))
 	>>> tuple(sorted_items(sample, key=reverse_string))
 	(('foo', 20), ('bar', 42), ('baz', 10))
-	
+
 	>>> tuple(sorted_items(sample, reverse=True))
 	(('foo', 20), ('baz', 10), ('bar', 42))
 	"""
@@ -264,7 +276,7 @@ class ItemsAsAttributes(object):
 	"""
 	Mix-in class to enable a mapping object to provide items as
 	attributes.
-	
+
 	>>> C = type('C', (dict, ItemsAsAttributes), dict())
 	>>> i = C()
 	>>> i['foo'] = 'bar'
