@@ -5,7 +5,8 @@ from __future__ import absolute_import
 import re
 import sys
 import operator
-from jaraco.util import callable
+
+from jaraco.lang.python import callable
 import jaraco.util.string
 
 class NonDataProperty(object):
