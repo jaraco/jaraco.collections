@@ -328,3 +328,18 @@ def invert_map(map):
 		raise ValueError('Key conflict in inverted mapping')
 	return res
 
+
+class IdentityOverrideMap(dict):
+	"""
+	A dictionary that by default maps each key to itself, but otherwise
+	acts like a normal dictionary.
+
+	>>> d = IdentityOverrideMap()
+	>>> d[42]
+	42
+	>>> d['speed'] = 'speedo'
+	>>> d['speed']
+	'speedo'
+	"""
+	def __missing__(self, key):
+		return key
