@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from __future__ import absolute_import
+from __future__ import absolute_import, unicode_literals
 
 import re
 import sys
@@ -108,18 +108,18 @@ class RangeMap(dict):
 	Let's create a map that maps 1-3 -> 'a', 4-6 -> 'b'
 	>>> r = RangeMap({3: 'a', 6: 'b'})  # boy, that was easy
 	>>> r[1], r[2], r[3], r[4], r[5], r[6]
-	('a', 'a', 'a', 'b', 'b', 'b')
+	(u'a', u'a', u'a', u'b', u'b', u'b')
 
 	Even float values should work so long as the comparison operator
 	supports it.
 	>>> r[4.5]
-	'b'
+	u'b'
 
 	But you'll notice that the way rangemap is defined, it must be open-ended on one side.
 	>>> r[0]
-	'a'
+	u'a'
 	>>> r[-1]
-	'a'
+	u'a'
 
 	One can close the open-end of the RangeMap by using undefined_value
 	>>> r = RangeMap({0: RangeMap.undefined_value, 3: 'a', 6: 'b'})
@@ -131,11 +131,11 @@ class RangeMap(dict):
 	One can get the first or last elements in the range by using RangeMap.Item
 	>>> last_item = RangeMap.Item(-1)
 	>>> r[last_item]
-	'b'
+	u'b'
 
 	.last_item is a shortcut for Item(-1)
 	>>> r[RangeMap.last_item]
-	'b'
+	u'b'
 
 	Sometimes it's useful to find the bounds for a RangeMap
 	>>> r.bounds()
@@ -173,7 +173,7 @@ class RangeMap(dict):
 		)
 
 	# some special values for the RangeMap
-	undefined_value = type('RangeValueUndefined', (object,), {})()
+	undefined_value = type(str('RangeValueUndefined'), (object,), {})()
 	class Item(int): pass
 	first_item = Item(0)
 	last_item = Item(-1)
@@ -205,19 +205,19 @@ class FoldedCaseKeyedDict(dict):
 	>>> d = FoldedCaseKeyedDict()
 	>>> d['heLlo'] = 'world'
 	>>> d
-	{'heLlo': 'world'}
+	{u'heLlo': u'world'}
 	>>> d['hello']
-	'world'
+	u'world'
 	>>> FoldedCaseKeyedDict({'heLlo': 'world'})
-	{'heLlo': 'world'}
+	{u'heLlo': u'world'}
 	>>> d = FoldedCaseKeyedDict({'heLlo': 'world'})
 	>>> d['hello']
-	'world'
+	u'world'
 	>>> d
-	{'heLlo': 'world'}
+	{u'heLlo': u'world'}
 	>>> d = FoldedCaseKeyedDict({'heLlo': 'world', 'Hello': 'world'})
 	>>> d
-	{'heLlo': 'world'}
+	{u'heLlo': u'world'}
 	"""
 	def __setitem__(self, key, val):
 		if isinstance(key, basestring):
@@ -241,7 +241,7 @@ class DictAdapter(object):
 
 	>>> import string
 	>>> "lowercase is %(lowercase)s" % DictAdapter(string)
-	'lowercase is abcdefghijklmnopqrstuvwxyz'
+	u'lowercase is abcdefghijklmnopqrstuvwxyz'
 	"""
 	def __init__(self, wrapped_ob):
 		self.object = wrapped_ob
@@ -254,20 +254,20 @@ class ItemsAsAttributes(object):
 	Mix-in class to enable a mapping object to provide items as
 	attributes.
 
-	>>> C = type('C', (dict, ItemsAsAttributes), dict())
+	>>> C = type(str('C'), (dict, ItemsAsAttributes), dict())
 	>>> i = C()
 	>>> i['foo'] = 'bar'
 	>>> i.foo
-	'bar'
+	u'bar'
 
 	# natural attribute access takes precedence
 	>>> i.foo = 'henry'
 	>>> i.foo
-	'henry'
+	u'henry'
 
 	# but as you might expect, the mapping functionality is preserved.
 	>>> i['foo']
-	'bar'
+	u'bar'
 
 	# A normal attribute error should be raised if an attribute is
 	#  requested that doesn't exist.
@@ -278,12 +278,12 @@ class ItemsAsAttributes(object):
 
 	It also works on dicts that customize __getitem__
 	>>> missing_func = lambda self, key: 'missing item'
-	>>> C = type('C', (dict, ItemsAsAttributes), dict(__missing__ = missing_func))
+	>>> C = type(str('C'), (dict, ItemsAsAttributes), dict(__missing__ = missing_func))
 	>>> i = C()
 	>>> i.missing
-	'missing item'
+	u'missing item'
 	>>> i.foo
-	'missing item'
+	u'missing item'
 	"""
 	def __getattr__(self, key):
 		try:
@@ -339,7 +339,7 @@ class IdentityOverrideMap(dict):
 	42
 	>>> d['speed'] = 'speedo'
 	>>> d['speed']
-	'speedo'
+	u'speedo'
 	"""
 	def __missing__(self, key):
 		return key
