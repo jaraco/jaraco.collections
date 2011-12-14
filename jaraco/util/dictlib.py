@@ -5,6 +5,8 @@ from __future__ import absolute_import, unicode_literals
 import re
 import sys
 import operator
+import collections
+import itertools
 
 from jaraco.lang.python import callable
 import jaraco.util.string
@@ -343,3 +345,35 @@ class IdentityOverrideMap(dict):
 	"""
 	def __missing__(self, key):
 		return key
+
+class DictStack(list, collections.Mapping):
+	"""
+	A stack of dictionaries that behaves as a view on those dictionaries,
+	giving preference to the last.
+
+	>>> stack = DictStack([dict(a=1, c=2), dict(b=2, a=2)])
+	>>> stack['a']
+	2
+	>>> stack['b']
+	2
+	>>> stack['c']
+	2
+	>>> stack.push(dict(a=3))
+	>>> stack['a']
+	3
+	>>> stack.keys()
+	['a', 'c', 'b']
+	>>> d = stack.pop()
+	>>> stack['a']
+	2
+	>>> d = stack.pop()
+	>>> stack['a']
+	1
+	"""
+	def keys(self):
+		return list(set(itertools.chain.from_iterable(c.keys() for c in self)))
+	def __getitem__(self, key):
+		for scope in reversed(self):
+			if key in scope: return scope[key]
+		raise KeyError(key)
+	push = list.append
