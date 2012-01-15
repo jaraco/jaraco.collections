@@ -219,17 +219,14 @@ class FoldedCaseKeyedDict(dict):
 	>>> d = FoldedCaseKeyedDict({'heLlo': 'world'})
 	>>> d['hello']
 	u'world'
+	>>> d['Hello']
+	u'world'
 	>>> d
 	{u'heLlo': u'world'}
 	>>> d = FoldedCaseKeyedDict({'heLlo': 'world', 'Hello': 'world'})
 	>>> d
 	{u'heLlo': u'world'}
 	"""
-	def __setitem__(self, key, val):
-		if isinstance(key, basestring):
-			key = jaraco.util.string.FoldedCase(key)
-		dict.__setitem__(self, key, val)
-
 	def __init__(self, *args, **kargs):
 		super(FoldedCaseKeyedDict, self).__init__()
 		# build a dictionary using the default constructs
@@ -237,6 +234,16 @@ class FoldedCaseKeyedDict(dict):
 		# build this dictionary using case insensitivity.
 		for item in d.items():
 			self.__setitem__(*item)
+
+	def __setitem__(self, key, val):
+		if isinstance(key, basestring):
+			key = jaraco.util.string.FoldedCase(key)
+		super(FoldedCaseKeyedDict, self).__setitem__(key, val)
+
+	def __getitem__(self, key):
+		if isinstance(key, basestring):
+			key = jaraco.util.string.FoldedCase(key)
+		return super(FoldedCaseKeyedDict, self).__getitem__(key)
 
 	def __contains__(self, key):
 		if isinstance(key, basestring):
