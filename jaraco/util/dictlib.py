@@ -210,6 +210,10 @@ class FoldedCaseKeyedDict(dict):
 	{u'heLlo': u'world'}
 	>>> d['hello']
 	u'world'
+	>>> 'hello' in d
+	True
+	>>> 'HELLO' in d
+	True
 	>>> FoldedCaseKeyedDict({'heLlo': 'world'})
 	{u'heLlo': u'world'}
 	>>> d = FoldedCaseKeyedDict({'heLlo': 'world'})
@@ -233,6 +237,11 @@ class FoldedCaseKeyedDict(dict):
 		# build this dictionary using case insensitivity.
 		for item in d.items():
 			self.__setitem__(*item)
+
+	def __contains__(self, key):
+		if isinstance(key, basestring):
+			key = jaraco.util.string.FoldedCase(key)
+		return super(FoldedCaseKeyedDict, self).__contains__(key)
 
 class DictAdapter(object):
 	"""
