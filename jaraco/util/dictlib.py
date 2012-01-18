@@ -201,7 +201,36 @@ def sorted_items(d, key=__identity, reverse=False):
 	pairkey_key = lambda item: key(item[0])
 	return sorted(d.items(), key=pairkey_key, reverse=reverse)
 
-class FoldedCaseKeyedDict(dict):
+class KeyTransformingDict(dict):
+	"""
+	A dict subclass that transforms the keys before they're used.
+	Subclasses may override the default key_transform to customize behavior.
+	"""
+	@staticmethod
+	def key_transform(key):
+		return key
+
+	def __init__(self, *args, **kargs):
+		super(KeyTransformingDict, self).__init__()
+		# build a dictionary using the default constructs
+		d = dict(*args, **kargs)
+		# build this dictionary using transformed keys.
+		for item in d.items():
+			self.__setitem__(*item)
+
+	def __setitem__(self, key, val):
+		key = self.key_transform(key)
+		super(KeyTransformingDict, self).__setitem__(key, val)
+
+	def __getitem__(self, key):
+		key = self.key_transform(key)
+		return super(KeyTransformingDict, self).__getitem__(key)
+
+	def __contains__(self, key):
+		key = self.key_transform(key)
+		return super(KeyTransformingDict, self).__contains__(key)
+
+class FoldedCaseKeyedDict(KeyTransformingDict):
 	"""A case-insensitive dictionary (keys are compared as insensitive
 	if they are strings).
 	>>> d = FoldedCaseKeyedDict()
@@ -227,28 +256,9 @@ class FoldedCaseKeyedDict(dict):
 	>>> d
 	{u'heLlo': u'world'}
 	"""
-	def __init__(self, *args, **kargs):
-		super(FoldedCaseKeyedDict, self).__init__()
-		# build a dictionary using the default constructs
-		d = dict(*args, **kargs)
-		# build this dictionary using case insensitivity.
-		for item in d.items():
-			self.__setitem__(*item)
-
-	def __setitem__(self, key, val):
-		if isinstance(key, basestring):
-			key = jaraco.util.string.FoldedCase(key)
-		super(FoldedCaseKeyedDict, self).__setitem__(key, val)
-
-	def __getitem__(self, key):
-		if isinstance(key, basestring):
-			key = jaraco.util.string.FoldedCase(key)
-		return super(FoldedCaseKeyedDict, self).__getitem__(key)
-
-	def __contains__(self, key):
-		if isinstance(key, basestring):
-			key = jaraco.util.string.FoldedCase(key)
-		return super(FoldedCaseKeyedDict, self).__contains__(key)
+	@staticmethod
+	def key_transform(key):
+		return jaraco.util.string.FoldedCase(key)
 
 class DictAdapter(object):
 	"""
