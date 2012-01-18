@@ -230,6 +230,10 @@ class KeyTransformingDict(dict):
 		key = self.key_transform(key)
 		return super(KeyTransformingDict, self).__contains__(key)
 
+	def __delitem__(self, key):
+		key = self.key_transform(key)
+		return super(KeyTransformingDict, self).__delitem__(key)
+
 class FoldedCaseKeyedDict(KeyTransformingDict):
 	"""A case-insensitive dictionary (keys are compared as insensitive
 	if they are strings).
@@ -255,6 +259,9 @@ class FoldedCaseKeyedDict(KeyTransformingDict):
 	>>> d = FoldedCaseKeyedDict({'heLlo': 'world', 'Hello': 'world'})
 	>>> d
 	{u'heLlo': u'world'}
+	>>> del d['HELLO']
+	>>> d
+	{}
 	"""
 	@staticmethod
 	def key_transform(key):
