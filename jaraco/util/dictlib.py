@@ -238,6 +238,10 @@ class KeyTransformingDict(dict):
 		key = self.key_transform(key)
 		return super(KeyTransformingDict, self).setdefault(key, *args, **kwargs)
 
+	def pop(self, key, *args, **kwargs):
+		key = self.key_transform(key)
+		return super(KeyTransformingDict, self).pop(key, *args, **kwargs)
+
 class FoldedCaseKeyedDict(KeyTransformingDict):
 	"""A case-insensitive dictionary (keys are compared as insensitive
 	if they are strings).
@@ -277,7 +281,11 @@ class FoldedCaseKeyedDict(KeyTransformingDict):
 	u'that'
 	>>> d.setdefault('That', 'other')
 	u'other'
-	>>> d['that']
+	>>> d['THAT']
+	u'other'
+
+	Make it pop!
+	>>> d.pop('THAT')
 	u'other'
 	"""
 	@staticmethod
