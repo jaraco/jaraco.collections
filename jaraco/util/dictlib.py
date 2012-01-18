@@ -234,6 +234,10 @@ class KeyTransformingDict(dict):
 		key = self.key_transform(key)
 		return super(KeyTransformingDict, self).__delitem__(key)
 
+	def setdefault(self, key, *args, **kwargs):
+		key = self.key_transform(key)
+		return super(KeyTransformingDict, self).setdefault(key, *args, **kwargs)
+
 class FoldedCaseKeyedDict(KeyTransformingDict):
 	"""A case-insensitive dictionary (keys are compared as insensitive
 	if they are strings).
@@ -262,6 +266,19 @@ class FoldedCaseKeyedDict(KeyTransformingDict):
 	>>> del d['HELLO']
 	>>> d
 	{}
+
+	setdefault should also work
+	>>> d['This'] = 'that'
+	>>> d.setdefault('this', 'other')
+	u'that'
+	>>> len(d)
+	1
+	>>> d['this']
+	u'that'
+	>>> d.setdefault('That', 'other')
+	u'other'
+	>>> d['that']
+	u'other'
 	"""
 	@staticmethod
 	def key_transform(key):
