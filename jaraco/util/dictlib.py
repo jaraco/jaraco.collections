@@ -204,10 +204,10 @@ def sorted_items(d, key=__identity, reverse=False):
 class KeyTransformingDict(dict):
 	"""
 	A dict subclass that transforms the keys before they're used.
-	Subclasses may override the default key_transform to customize behavior.
+	Subclasses may override the default transform_key to customize behavior.
 	"""
 	@staticmethod
-	def key_transform(key):
+	def transform_key(key):
 		return key
 
 	def __init__(self, *args, **kargs):
@@ -219,27 +219,27 @@ class KeyTransformingDict(dict):
 			self.__setitem__(*item)
 
 	def __setitem__(self, key, val):
-		key = self.key_transform(key)
+		key = self.transform_key(key)
 		super(KeyTransformingDict, self).__setitem__(key, val)
 
 	def __getitem__(self, key):
-		key = self.key_transform(key)
+		key = self.transform_key(key)
 		return super(KeyTransformingDict, self).__getitem__(key)
 
 	def __contains__(self, key):
-		key = self.key_transform(key)
+		key = self.transform_key(key)
 		return super(KeyTransformingDict, self).__contains__(key)
 
 	def __delitem__(self, key):
-		key = self.key_transform(key)
+		key = self.transform_key(key)
 		return super(KeyTransformingDict, self).__delitem__(key)
 
 	def setdefault(self, key, *args, **kwargs):
-		key = self.key_transform(key)
+		key = self.transform_key(key)
 		return super(KeyTransformingDict, self).setdefault(key, *args, **kwargs)
 
 	def pop(self, key, *args, **kwargs):
-		key = self.key_transform(key)
+		key = self.transform_key(key)
 		return super(KeyTransformingDict, self).pop(key, *args, **kwargs)
 
 class FoldedCaseKeyedDict(KeyTransformingDict):
@@ -289,7 +289,7 @@ class FoldedCaseKeyedDict(KeyTransformingDict):
 	u'other'
 	"""
 	@staticmethod
-	def key_transform(key):
+	def transform_key(key):
 		return jaraco.util.string.FoldedCase(key)
 
 class DictAdapter(object):
