@@ -3,12 +3,10 @@
 from __future__ import absolute_import, unicode_literals
 
 import re
-import sys
 import operator
 import collections
 import itertools
 
-from jaraco.lang.python import callable
 import jaraco.util.string
 from jaraco.util.properties import NonDataProperty
 
