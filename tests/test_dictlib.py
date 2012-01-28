@@ -6,7 +6,7 @@ class AlwaysStringKeysDict(dictlib.KeyTransformingDict):
 	the keys to strings.
 	"""
 	@staticmethod
-	def key_transform(key):
+	def transform_key(key):
 		return unicode(key)
 
 def test_always_lower_keys_dict():
