@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from __future__ import absolute_import, unicode_literals
+from __future__ import absolute_import, unicode_literals, division
 
 import re
 import operator
@@ -451,3 +451,90 @@ class DictStack(list, collections.Mapping):
 			if key in scope: return scope[key]
 		raise KeyError(key)
 	push = list.append
+
+class BijectiveMap(dict):
+	"""
+	A Bijective Map (two-way mapping).
+
+	Implemented as a simple dictionary of 2x the size, mapping values back
+	to keys.
+
+	Note, this implementation may be incomplete. If there's not a test for
+	your use case below, it's likely to fail, so please test and send pull
+	requests or patches for additional functionality needed.
+
+
+	>>> m = BijectiveMap()
+	>>> m['a'] = 'b'
+	>>> m
+	{u'a': u'b', u'b': u'a'}
+	>>> m['b']
+	u'a'
+
+	>>> m['c'] = 'd'
+	>>> len(m)
+	2
+
+	Some weird things happen if you map an item to itself or overwrite a
+	single key of a pair, so it's disallowed.
+
+	>>> m['e'] = 'e'
+	Traceback (most recent call last):
+	ValueError: Key cannot map to itself
+
+	>>> m['d'] = 'e'
+	Traceback (most recent call last):
+	ValueError: Key/Value pairs may not overlap
+
+	>>> m.pop('d')
+	u'c'
+
+	>>> 'c' in m
+	False
+
+	>>> m = BijectiveMap(dict(a='b'))
+	>>> len(m)
+	1
+	>>> m['b']
+	'a'
+
+	>>> m = BijectiveMap()
+	>>> m.update(a='b')
+	>>> m['b']
+	'a'
+
+	>>> del m['b']
+	>>> len(m)
+	0
+	>>> 'a' in m
+	False
+	"""
+	def __init__(self, *args, **kwargs):
+		super(BijectiveMap, self).__init__()
+		self.update(*args, **kwargs)
+
+	def __setitem__(self, item, value):
+		if item == value:
+			raise ValueError("Key cannot map to itself")
+		if (value in self or item in self) and self[item] != value:
+			raise ValueError("Key/Value pairs may not overlap")
+		super(BijectiveMap, self).__setitem__(item, value)
+		super(BijectiveMap, self).__setitem__(value, item)
+
+	def __delitem__(self, item):
+		self.pop(item)
+
+	def __len__(self):
+		return super(BijectiveMap, self).__len__() / 2
+
+	def pop(self, key, *args, **kwargs):
+		mirror = self[key]
+		super(BijectiveMap, self).__delitem__(mirror)
+		return super(BijectiveMap, self).pop(key, *args, **kwargs)
+
+	def update(self, *args, **kwargs):
+		# build a dictionary using the default constructs
+		d = dict(*args, **kwargs)
+		# build this dictionary using transformed keys.
+		for item in d.items():
+			self.__setitem__(*item)
