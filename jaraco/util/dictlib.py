@@ -538,3 +538,57 @@ class BijectiveMap(dict):
 		# build this dictionary using transformed keys.
 		for item in d.items():
 			self.__setitem__(*item)
+
+class FrozenDict(collections.Mapping, collections.Hashable):
+	"""
+	An immutable mapping.
+
+	>>> a = FrozenDict(a=1, b=2)
+	>>> b = FrozenDict(a=1, b=2)
+	>>> a == b
+	True
+
+	>>> a['c'] = 3
+	Traceback (most recent call last):
+	...
+	TypeError: 'FrozenDict' object does not support item assignment
+
+	>>> a.update(y=3)
+	Traceback (most recent call last):
+	...
+	AttributeError: 'FrozenDict' object has no attribute 'update'
+	"""
+	__slots__ = ['__data']
+
+	def __new__(cls, *args, **kwargs):
+		self = super(FrozenDict, cls).__new__(cls)
+		self.__data = dict(*args, **kwargs)
+		return self
+
+	# Container
+	def __contains__(self, key):
+		return key in self.__data
+
+	# Hashable
+	def __hash__(self):
+		return hash(tuple(sorted(self.__data.iteritems())))
+
+	# Mapping
+	def __iter__(self):
+		return iter(self.__data)
+
+	def __len__(self):
+		return len(self.__data)
+
+	def __getitem__(self, key):
+		return self.__data[key]
+
+	# override get, __eq__, and __ne__ for efficiency provided by dict
+	def get(self, *args, **kwargs):
+		return self.__data.get(*args, **kwargs)
+
+	def __eq__(self, other):
+		return self.__data.__eq__(other)
+
+	def __ne__(self, other):
+		return self.__data.__ne__(other)
