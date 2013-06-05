@@ -6,6 +6,7 @@ import re
 import operator
 import collections
 import itertools
+import copy
 
 import jaraco.util.string
 from jaraco.util.properties import NonDataProperty
@@ -559,12 +560,18 @@ class FrozenDict(collections.Mapping, collections.Hashable):
 	AttributeError: 'FrozenDict' object has no attribute 'update'
 
 	Copies should compare equal
-	>>> import copy
 	>>> copy.copy(a) == a
 	True
 
 	Copies should be the same type
 	>>> isinstance(copy.copy(a), FrozenDict)
+	True
+
+	FrozenDict supplies .copy(), even though collections.Mapping doesn't
+	demand it.
+	>>> a.copy() == a
+	True
+	>>> a.copy() is not a
 	True
 	"""
 	__slots__ = ['__data']
@@ -601,3 +608,7 @@ class FrozenDict(collections.Mapping, collections.Hashable):
 		if isinstance(other, FrozenDict):
 			other = other.__data
 		return self.__data.__eq__(other)
+
+	def copy(self):
+		"Return a shallow copy of self"
+		return copy.copy(self)
