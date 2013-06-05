@@ -557,6 +557,15 @@ class FrozenDict(collections.Mapping, collections.Hashable):
 	Traceback (most recent call last):
 	...
 	AttributeError: 'FrozenDict' object has no attribute 'update'
+
+	Copies should compare equal
+	>>> import copy
+	>>> copy.copy(a) == a
+	True
+
+	Copies should be the same type
+	>>> isinstance(copy.copy(a), FrozenDict)
+	True
 	"""
 	__slots__ = ['__data']
 
@@ -583,12 +592,12 @@ class FrozenDict(collections.Mapping, collections.Hashable):
 	def __getitem__(self, key):
 		return self.__data[key]
 
-	# override get, __eq__, and __ne__ for efficiency provided by dict
+	# override get for efficiency provided by dict
 	def get(self, *args, **kwargs):
 		return self.__data.get(*args, **kwargs)
 
+	# override eq to recognize underlying implementation
 	def __eq__(self, other):
+		if isinstance(other, FrozenDict):
+			other = other.__data
 		return self.__data.__eq__(other)
-
-	def __ne__(self, other):
-		return self.__data.__ne__(other)
