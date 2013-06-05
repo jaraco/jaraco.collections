@@ -549,6 +549,11 @@ class FrozenDict(collections.Mapping, collections.Hashable):
 	>>> a == b
 	True
 
+	>>> a == dict(a=1, b=2)
+	True
+	>>> dict(a=1, b=2) == a
+	True
+
 	>>> a['c'] = 3
 	Traceback (most recent call last):
 	...
