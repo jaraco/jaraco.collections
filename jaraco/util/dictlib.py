@@ -109,18 +109,18 @@ class RangeMap(dict):
 	Let's create a map that maps 1-3 -> 'a', 4-6 -> 'b'
 	>>> r = RangeMap({3: 'a', 6: 'b'})  # boy, that was easy
 	>>> r[1], r[2], r[3], r[4], r[5], r[6]
-	(u'a', u'a', u'a', u'b', u'b', u'b')
+	('a', 'a', 'a', 'b', 'b', 'b')
 
 	Even float values should work so long as the comparison operator
 	supports it.
 	>>> r[4.5]
-	u'b'
+	'b'
 
 	But you'll notice that the way rangemap is defined, it must be open-ended on one side.
 	>>> r[0]
-	u'a'
+	'a'
 	>>> r[-1]
-	u'a'
+	'a'
 
 	One can close the open-end of the RangeMap by using undefined_value
 	>>> r = RangeMap({0: RangeMap.undefined_value, 3: 'a', 6: 'b'})
@@ -132,11 +132,11 @@ class RangeMap(dict):
 	One can get the first or last elements in the range by using RangeMap.Item
 	>>> last_item = RangeMap.Item(-1)
 	>>> r[last_item]
-	u'b'
+	'b'
 
 	.last_item is a shortcut for Item(-1)
 	>>> r[RangeMap.last_item]
-	u'b'
+	'b'
 
 	Sometimes it's useful to find the bounds for a RangeMap
 	>>> r.bounds()
@@ -144,10 +144,10 @@ class RangeMap(dict):
 
 	RangeMap supports .get(key, default)
 	>>> r.get(0, 'not found')
-	u'not found'
+	'not found'
 
 	>>> r.get(7, 'not found')
-	u'not found'
+	'not found'
 
 	"""
 	def __init__(self, source, sort_params = {}, key_match_comparator = operator.le):
@@ -260,50 +260,53 @@ class KeyTransformingDict(dict):
 		return super(KeyTransformingDict, self).pop(key, *args, **kwargs)
 
 class FoldedCaseKeyedDict(KeyTransformingDict):
-	"""A case-insensitive dictionary (keys are compared as insensitive
+	"""
+	A case-insensitive dictionary (keys are compared as insensitive
 	if they are strings).
 	>>> d = FoldedCaseKeyedDict()
 	>>> d['heLlo'] = 'world'
-	>>> d
-	{u'heLlo': u'world'}
-	>>> d['hello']
-	u'world'
+	>>> list(d.keys()) == ['heLlo']
+	True
+	>>> list(d.values()) == ['world']
+	True
+	>>> d['hello'] == 'world'
+	True
 	>>> 'hello' in d
 	True
 	>>> 'HELLO' in d
 	True
-	>>> FoldedCaseKeyedDict({'heLlo': 'world'})
-	{u'heLlo': u'world'}
+	>>> print(repr(FoldedCaseKeyedDict({'heLlo': 'world'})).replace("u'", "'"))
+	{'heLlo': 'world'}
 	>>> d = FoldedCaseKeyedDict({'heLlo': 'world'})
-	>>> d['hello']
-	u'world'
-	>>> d['Hello']
-	u'world'
-	>>> d
-	{u'heLlo': u'world'}
+	>>> print(d['hello'])
+	world
+	>>> print(d['Hello'])
+	world
+	>>> list(d.keys())
+	['heLlo']
 	>>> d = FoldedCaseKeyedDict({'heLlo': 'world', 'Hello': 'world'})
-	>>> d
-	{u'heLlo': u'world'}
+	>>> list(d.keys())
+	['heLlo']
 	>>> del d['HELLO']
 	>>> d
 	{}
 
 	setdefault should also work
 	>>> d['This'] = 'that'
-	>>> d.setdefault('this', 'other')
-	u'that'
+	>>> print(d.setdefault('this', 'other'))
+	that
 	>>> len(d)
 	1
-	>>> d['this']
-	u'that'
-	>>> d.setdefault('That', 'other')
-	u'other'
-	>>> d['THAT']
-	u'other'
+	>>> print(d['this'])
+	that
+	>>> print(d.setdefault('That', 'other'))
+	other
+	>>> print(d['THAT'])
+	other
 
 	Make it pop!
-	>>> d.pop('THAT')
-	u'other'
+	>>> print(d.pop('THAT'))
+	other
 	"""
 	@staticmethod
 	def transform_key(key):
@@ -317,8 +320,8 @@ class DictAdapter(object):
 	string. It's easy with DictAdapter.
 
 	>>> import string
-	>>> "lowercase is %(lowercase)s" % DictAdapter(string)
-	u'lowercase is abcdefghijklmnopqrstuvwxyz'
+	>>> print("lowercase is %(ascii_lowercase)s" % DictAdapter(string))
+	lowercase is abcdefghijklmnopqrstuvwxyz
 	"""
 	def __init__(self, wrapped_ob):
 		self.object = wrapped_ob
@@ -335,16 +338,16 @@ class ItemsAsAttributes(object):
 	>>> i = C()
 	>>> i['foo'] = 'bar'
 	>>> i.foo
-	u'bar'
+	'bar'
 
 	# natural attribute access takes precedence
 	>>> i.foo = 'henry'
 	>>> i.foo
-	u'henry'
+	'henry'
 
 	# but as you might expect, the mapping functionality is preserved.
 	>>> i['foo']
-	u'bar'
+	'bar'
 
 	# A normal attribute error should be raised if an attribute is
 	#  requested that doesn't exist.
@@ -358,9 +361,9 @@ class ItemsAsAttributes(object):
 	>>> C = type(str('C'), (dict, ItemsAsAttributes), dict(__missing__ = missing_func))
 	>>> i = C()
 	>>> i.missing
-	u'missing item'
+	'missing item'
 	>>> i.foo
-	u'missing item'
+	'missing item'
 	"""
 	def __getattr__(self, key):
 		try:
@@ -400,7 +403,7 @@ def invert_map(map):
 	...
 	ValueError: Key conflict in inverted mapping
 	"""
-	res = dict((v,k) for k, v in map.iteritems())
+	res = dict((v,k) for k, v in map.items())
 	if not len(res) == len(map):
 		raise ValueError('Key conflict in inverted mapping')
 	return res
@@ -415,8 +418,8 @@ class IdentityOverrideMap(dict):
 	>>> d[42]
 	42
 	>>> d['speed'] = 'speedo'
-	>>> d['speed']
-	u'speedo'
+	>>> print(d['speed'])
+	speedo
 	"""
 	def __missing__(self, key):
 		return key
@@ -436,8 +439,8 @@ class DictStack(list, collections.Mapping):
 	>>> stack.push(dict(a=3))
 	>>> stack['a']
 	3
-	>>> stack.keys()
-	['a', 'c', 'b']
+	>>> set(stack.keys()) == set(['a', 'b', 'c'])
+	True
 	>>> d = stack.pop()
 	>>> stack['a']
 	2
@@ -467,10 +470,10 @@ class BijectiveMap(dict):
 
 	>>> m = BijectiveMap()
 	>>> m['a'] = 'b'
-	>>> m
-	{u'a': u'b', u'b': u'a'}
-	>>> m['b']
-	u'a'
+	>>> m == {'a': 'b', 'b': 'a'}
+	True
+	>>> print(m['b'])
+	a
 
 	>>> m['c'] = 'd'
 	>>> len(m)
@@ -487,8 +490,8 @@ class BijectiveMap(dict):
 	Traceback (most recent call last):
 	ValueError: Key/Value pairs may not overlap
 
-	>>> m.pop('d')
-	u'c'
+	>>> print(m.pop('d'))
+	c
 
 	>>> 'c' in m
 	False
@@ -496,8 +499,8 @@ class BijectiveMap(dict):
 	>>> m = BijectiveMap(dict(a='b'))
 	>>> len(m)
 	1
-	>>> m['b']
-	'a'
+	>>> print(m['b'])
+	a
 
 	>>> m = BijectiveMap()
 	>>> m.update(a='b')
@@ -526,7 +529,7 @@ class BijectiveMap(dict):
 		self.pop(item)
 
 	def __len__(self):
-		return super(BijectiveMap, self).__len__() / 2
+		return super(BijectiveMap, self).__len__() // 2
 
 	def pop(self, key, *args, **kwargs):
 		mirror = self[key]
