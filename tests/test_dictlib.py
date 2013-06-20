@@ -1,5 +1,7 @@
 from jaraco.util import dictlib
 
+from jaraco.util import six
+
 class AlwaysStringKeysDict(dictlib.KeyTransformingDict):
 	"""
 	An implementation of a KeyTransformingDict subclass that always converts
@@ -7,7 +9,7 @@ class AlwaysStringKeysDict(dictlib.KeyTransformingDict):
 	"""
 	@staticmethod
 	def transform_key(key):
-		return unicode(key)
+		return six.text_type(key)
 
 def test_always_lower_keys_dict():
 	"""
@@ -18,7 +20,7 @@ def test_always_lower_keys_dict():
 	d['Lasting'] = 'fleeting'
 	d[3] = 'three'
 	d[{'a': 1}] = 'a is one'
-	assert all(isinstance(key, unicode) for key in d)
+	assert all(isinstance(key, six.text_type) for key in d)
 	assert "{'a': 1}" in d
 	assert 3 in d
 	assert d[3] == d['3'] == 'three'
