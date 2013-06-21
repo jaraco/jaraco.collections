@@ -1,6 +1,6 @@
 from jaraco.util import dictlib
 
-from jaraco.util import six
+import six
 
 class AlwaysStringKeysDict(dictlib.KeyTransformingDict):
 	"""
