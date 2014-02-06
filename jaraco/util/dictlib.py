@@ -259,6 +259,16 @@ class KeyTransformingDict(dict):
 		key = self.transform_key(key)
 		return super(KeyTransformingDict, self).pop(key, *args, **kwargs)
 
+	def matching_key_for(self, key):
+		"""
+		Given a key, return the actual key stored in self that matches.
+		Raise KeyError if the key isn't found.
+		"""
+		try:
+			return next(e_key for e_key in self.keys() if e_key == key)
+		except StopIteration:
+			raise KeyError(key)
+
 class FoldedCaseKeyedDict(KeyTransformingDict):
 	"""
 	A case-insensitive dictionary (keys are compared as insensitive
@@ -307,6 +317,10 @@ class FoldedCaseKeyedDict(KeyTransformingDict):
 	Make it pop!
 	>>> print(d.pop('THAT'))
 	other
+
+	To retrieve the key in its originally-supplied form, use matching_key_for
+	>>> print(d.matching_key_for('this'))
+	This
 	"""
 	@staticmethod
 	def transform_key(key):
