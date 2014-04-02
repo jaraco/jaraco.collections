@@ -295,8 +295,11 @@ class FoldedCaseKeyedDict(KeyTransformingDict):
 	>>> list(d.keys())
 	['heLlo']
 	>>> d = FoldedCaseKeyedDict({'heLlo': 'world', 'Hello': 'world'})
-	>>> list(d.keys())
-	['heLlo']
+	>>> list(d.values())
+	['world']
+	>>> key, = d.keys()
+	>>> key in ['heLlo', 'Hello']
+	True
 	>>> del d['HELLO']
 	>>> d
 	{}
