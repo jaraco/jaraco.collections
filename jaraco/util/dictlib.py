@@ -8,6 +8,8 @@ import collections
 import itertools
 import copy
 
+import six
+
 import jaraco.util.string
 from jaraco.util.properties import NonDataProperty
 
@@ -637,3 +639,51 @@ class FrozenDict(collections.Mapping, collections.Hashable):
 	def copy(self):
 		"Return a shallow copy of self"
 		return copy.copy(self)
+
+
+class Enumeration(ItemsAsAttributes, BijectiveMap):
+	"""
+	A convenient way to provide enumerated values
+
+	>>> e = Enumeration('a b c')
+	>>> e['a']
+	0
+
+	>>> e.a
+	0
+
+	>>> e[1]
+	'b'
+
+	>>> set(e.names) == set('abc')
+	True
+
+	>>> set(e.codes) == set(range(3))
+	True
+
+	>>> e.get('d') is None
+	True
+
+	Codes need not start with 0
+
+	>>> e = Enumeration('a b c', range(1, 4))
+	>>> e['a']
+	1
+
+	>>> e[3]
+	'c'
+	"""
+	def __init__(self, names, codes=None):
+		if isinstance(names, six.string_types):
+			names = names.split()
+		if codes is None:
+			codes = itertools.count()
+		super(Enumeration, self).__init__(zip(names, codes))
+
+	@property
+	def names(self):
+		return (key for key in self if isinstance(key, six.string_types))
+
+	@property
+	def codes(self):
+		return (self[name] for name in self.names)
