@@ -283,6 +283,7 @@ class FoldedCaseKeyedDict(KeyTransformingDict):
 	"""
 	A case-insensitive dictionary (keys are compared as insensitive
 	if they are strings).
+
 	>>> d = FoldedCaseKeyedDict()
 	>>> d['heLlo'] = 'world'
 	>>> list(d.keys()) == ['heLlo']
@@ -315,6 +316,7 @@ class FoldedCaseKeyedDict(KeyTransformingDict):
 	{}
 
 	setdefault should also work
+
 	>>> d['This'] = 'that'
 	>>> print(d.setdefault('this', 'other'))
 	that
@@ -328,10 +330,12 @@ class FoldedCaseKeyedDict(KeyTransformingDict):
 	other
 
 	Make it pop!
+
 	>>> print(d.pop('THAT'))
 	other
 
 	To retrieve the key in its originally-supplied form, use matching_key_for
+
 	>>> print(d.matching_key_for('this'))
 	This
 	"""
@@ -367,23 +371,27 @@ class ItemsAsAttributes(object):
 	>>> i.foo
 	'bar'
 
-	# natural attribute access takes precedence
+	Natural attribute access takes precedence
+
 	>>> i.foo = 'henry'
 	>>> i.foo
 	'henry'
 
-	# but as you might expect, the mapping functionality is preserved.
+	But as you might expect, the mapping functionality is preserved.
+
 	>>> i['foo']
 	'bar'
 
-	# A normal attribute error should be raised if an attribute is
-	#  requested that doesn't exist.
+	A normal attribute error should be raised if an attribute is
+	requested that doesn't exist.
+
 	>>> i.missing
 	Traceback (most recent call last):
 	...
 	AttributeError: 'C' object has no attribute 'missing'
 
 	It also works on dicts that customize __getitem__
+
 	>>> missing_func = lambda self, key: 'missing item'
 	>>> C = type(str('C'), (dict, ItemsAsAttributes), dict(__missing__ = missing_func))
 	>>> i = C()
@@ -595,15 +603,18 @@ class FrozenDict(collections.Mapping, collections.Hashable):
 	AttributeError: 'FrozenDict' object has no attribute 'update'
 
 	Copies should compare equal
+
 	>>> copy.copy(a) == a
 	True
 
 	Copies should be the same type
+
 	>>> isinstance(copy.copy(a), FrozenDict)
 	True
 
 	FrozenDict supplies .copy(), even though collections.Mapping doesn't
 	demand it.
+
 	>>> a.copy() == a
 	True
 	>>> a.copy() is not a
