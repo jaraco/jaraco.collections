@@ -2,6 +2,7 @@ import six
 
 from jaraco import collections
 
+
 class AlwaysStringKeysDict(collections.KeyTransformingDict):
 	"""
 	An implementation of a KeyTransformingDict subclass that always converts
@@ -10,6 +11,7 @@ class AlwaysStringKeysDict(collections.KeyTransformingDict):
 	@staticmethod
 	def transform_key(key):
 		return six.text_type(key)
+
 
 def test_always_lower_keys_dict():
 	"""
