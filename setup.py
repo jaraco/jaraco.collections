@@ -19,6 +19,9 @@ setup_params = dict(
 	url="https://bitbucket.org/jaraco/jaraco.collections",
 	packages=setuptools.find_packages(),
 	install_requires=[
+		'jaraco.text',
+		'jaraco.classes',
+		'six',
 	],
 	setup_requires=[
 		'hgtools',
