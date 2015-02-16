@@ -1,8 +1,8 @@
-from jaraco.util import dictlib
-
 import six
 
-class AlwaysStringKeysDict(dictlib.KeyTransformingDict):
+from jaraco import collections
+
+class AlwaysStringKeysDict(collections.KeyTransformingDict):
 	"""
 	An implementation of a KeyTransformingDict subclass that always converts
 	the keys to strings.
