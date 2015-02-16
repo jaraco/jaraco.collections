@@ -10,8 +10,7 @@ import copy
 
 import six
 from jaraco.classes.properties import NonDataProperty
-
-import jaraco.util.string
+import jaraco.text
 
 
 class DictFilter(object):
@@ -342,7 +341,7 @@ class FoldedCaseKeyedDict(KeyTransformingDict):
 	"""
 	@staticmethod
 	def transform_key(key):
-		return jaraco.util.string.FoldedCase(key)
+		return jaraco.text.FoldedCase(key)
 
 class DictAdapter(object):
 	"""
