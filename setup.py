@@ -12,6 +12,8 @@ with io.open('CHANGES.txt', encoding='utf-8') as changes:
 
 needs_pytest = {'pytest', 'test', 'ptr'}.intersection(sys.argv)
 pytest_runner = ['pytest_runner'] if needs_pytest else []
+needs_sphinx = {'release', 'build_sphinx', 'upload_docs'}.intersection(sys.argv)
+sphinx = ['sphinx'] if needs_sphinx else []
 
 setup_params = dict(
 	name='jaraco.collections',
@@ -29,8 +31,7 @@ setup_params = dict(
 	],
 	setup_requires=[
 		'hgtools',
-		'sphinx',
-	] + pytest_runner,
+	] + pytest_runner + sphinx,
 	tests_require=[
 		'pytest',
 	],
