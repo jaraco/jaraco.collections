@@ -9,9 +9,9 @@ import itertools
 import copy
 
 import six
+from jaraco.classes.properties import NonDataProperty
 
 import jaraco.util.string
-from jaraco.util.properties import NonDataProperty
 
 class DictFilter(object):
 	"""
