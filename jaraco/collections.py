@@ -13,6 +13,7 @@ from jaraco.classes.properties import NonDataProperty
 
 import jaraco.util.string
 
+
 class DictFilter(object):
 	"""
 	Takes a dict, and simulates a sub-dict based on the keys.
@@ -706,3 +707,18 @@ class Enumeration(ItemsAsAttributes, BijectiveMap):
 	@property
 	def codes(self):
 		return (self[name] for name in self.names)
+
+
+class Everything(object):
+	"""
+	A collection "containing" every possibly thing.
+
+	>>> 'foo' in Everything()
+	True
+
+	>>> import random
+	>>> random.randint(1, 999) in Everything()
+	True
+	"""
+	def __contains__(self, other):
+		return True
