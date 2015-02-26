@@ -1,5 +1,5 @@
 Welcome to jaraco.collections documentation!
-========================================
+============================================
 
 .. automodule:: jaraco.collections
     :members:
