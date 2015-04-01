@@ -737,3 +737,38 @@ class Everything(object):
 	"""
 	def __contains__(self, other):
 		return True
+
+
+class InstrumentedDict(collections.MutableMapping):
+	"""
+	Instrument an existing dictionary with additional
+	functionality, but always reference and mutate
+	the original dictionary.
+
+	>>> orig = {'a': 1, 'b': 2}
+	>>> inst = InstrumentedDict(orig)
+	>>> inst['a']
+	1
+	>>> inst['c'] = 3
+	>>> orig['c']
+	3
+	>>> inst.keys() == orig.keys()
+	True
+	"""
+	def __init__(self, orig):
+		self._orig = orig
+
+	def __delitem__(self, *args, **kwargs):
+		return self._orig.__delitem__(*args, **kwargs)
+
+	def __getitem__(self, *args, **kwargs):
+		return self._orig.__getitem__(*args, **kwargs)
+
+	def __iter__(self, *args, **kwargs):
+		return self._orig.__iter__(*args, **kwargs)
+
+	def __len__(self, *args, **kwargs):
+		return self._orig.__len__(*args, **kwargs)
+
+	def __setitem__(self, *args, **kwargs):
+		return self._orig.__setitem__(*args, **kwargs)
