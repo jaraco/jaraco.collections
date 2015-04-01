@@ -85,6 +85,7 @@ class DictFilter(object):
 	def __ne__(self, other):
 		return dict(self) != other
 
+
 def dict_map(function, dictionary):
 	"""
 	dict_map is much like the built-in function map.  It takes a dictionary
@@ -96,6 +97,7 @@ def dict_map(function, dictionary):
 	True
 	"""
 	return dict((key, function(value)) for key, value in dictionary.items())
+
 
 class RangeMap(dict):
 	"""
@@ -207,7 +209,9 @@ class RangeMap(dict):
 	first_item = Item(0)
 	last_item = Item(-1)
 
+
 __identity = lambda x: x
+
 
 def sorted_items(d, key=__identity, reverse=False):
 	"""
@@ -227,6 +231,7 @@ def sorted_items(d, key=__identity, reverse=False):
 	# wrap the key func so it operates on the first element of each item
 	pairkey_key = lambda item: key(item[0])
 	return sorted(d.items(), key=pairkey_key, reverse=reverse)
+
 
 class KeyTransformingDict(dict):
 	"""
@@ -278,6 +283,7 @@ class KeyTransformingDict(dict):
 			return next(e_key for e_key in self.keys() if e_key == key)
 		except StopIteration:
 			raise KeyError(key)
+
 
 class FoldedCaseKeyedDict(KeyTransformingDict):
 	"""
@@ -343,6 +349,7 @@ class FoldedCaseKeyedDict(KeyTransformingDict):
 	def transform_key(key):
 		return jaraco.text.FoldedCase(key)
 
+
 class DictAdapter(object):
 	"""
 	Provide a getitem interface for attributes of an object.
@@ -359,6 +366,7 @@ class DictAdapter(object):
 
 	def __getitem__(self, name):
 		return getattr(self.object, name)
+
 
 class ItemsAsAttributes(object):
 	"""
@@ -422,6 +430,7 @@ class ItemsAsAttributes(object):
 			e.args = message,
 			raise
 
+
 def invert_map(map):
 	"""
 	Given a dictionary, return another dictionary with keys and values
@@ -456,8 +465,10 @@ class IdentityOverrideMap(dict):
 	>>> print(d['speed'])
 	speedo
 	"""
+
 	def __missing__(self, key):
 		return key
+
 
 class DictStack(list, collections.Mapping):
 	"""
@@ -483,13 +494,17 @@ class DictStack(list, collections.Mapping):
 	>>> stack['a']
 	1
 	"""
+
 	def keys(self):
 		return list(set(itertools.chain.from_iterable(c.keys() for c in self)))
+
 	def __getitem__(self, key):
 		for scope in reversed(self):
 			if key in scope: return scope[key]
 		raise KeyError(key)
+
 	push = list.append
+
 
 class BijectiveMap(dict):
 	"""
@@ -577,6 +592,7 @@ class BijectiveMap(dict):
 		# build this dictionary using transformed keys.
 		for item in d.items():
 			self.__setitem__(*item)
+
 
 class FrozenDict(collections.Mapping, collections.Hashable):
 	"""
