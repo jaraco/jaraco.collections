@@ -739,7 +739,7 @@ class Everything(object):
 		return True
 
 
-class InstrumentedDict(collections.MutableMapping):
+class InstrumentedDict(collections.UserDict):
 	"""
 	Instrument an existing dictionary with additional
 	functionality, but always reference and mutate
@@ -755,20 +755,6 @@ class InstrumentedDict(collections.MutableMapping):
 	>>> inst.keys() == orig.keys()
 	True
 	"""
-	def __init__(self, orig):
-		self._orig = orig
-
-	def __delitem__(self, *args, **kwargs):
-		return self._orig.__delitem__(*args, **kwargs)
-
-	def __getitem__(self, *args, **kwargs):
-		return self._orig.__getitem__(*args, **kwargs)
-
-	def __iter__(self, *args, **kwargs):
-		return self._orig.__iter__(*args, **kwargs)
-
-	def __len__(self, *args, **kwargs):
-		return self._orig.__len__(*args, **kwargs)
-
-	def __setitem__(self, *args, **kwargs):
-		return self._orig.__setitem__(*args, **kwargs)
+	def __init__(self, data):
+		super(InstrumentedDict, self).__init__()
+		self.data = data
