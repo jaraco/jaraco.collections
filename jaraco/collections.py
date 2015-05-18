@@ -726,7 +726,7 @@ class Enumeration(ItemsAsAttributes, BijectiveMap):
 
 class Everything(object):
 	"""
-	A collection "containing" every possibly thing.
+	A collection "containing" every possible thing.
 
 	>>> 'foo' in Everything()
 	True
