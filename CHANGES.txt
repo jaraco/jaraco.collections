@@ -1,3 +1,8 @@
+1.2
+===
+
+Add InstrumentedDict.
+
 1.1
 ===
 
