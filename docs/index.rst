@@ -1,6 +1,12 @@
 Welcome to jaraco.collections documentation!
 ========================================
 
+.. toctree::
+   :maxdepth: 1
+
+   history
+
+
 .. automodule:: jaraco.collections
     :members:
     :undoc-members:
