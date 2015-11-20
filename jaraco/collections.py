@@ -739,7 +739,7 @@ class Everything(object):
 		return True
 
 
-class InstrumentedDict(collections.UserDict):
+class InstrumentedDict(six.moves.UserDict):
 	"""
 	Instrument an existing dictionary with additional
 	functionality, but always reference and mutate
@@ -756,5 +756,5 @@ class InstrumentedDict(collections.UserDict):
 	True
 	"""
 	def __init__(self, data):
-		super(InstrumentedDict, self).__init__()
+		six.moves.UserDict.__init__(self)
 		self.data = data
