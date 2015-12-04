@@ -31,7 +31,7 @@ setup_params = dict(
 	install_requires=[
 		'jaraco.text',
 		'jaraco.classes',
-		'six',
+		'six>=1.7.0',
 	],
 	extras_require={
 	},
