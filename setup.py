@@ -17,6 +17,14 @@ sphinx = ['sphinx'] if needs_sphinx else []
 needs_wheel = {'release', 'bdist_wheel'}.intersection(sys.argv)
 wheel = ['wheel'] if needs_wheel else []
 
+tests_require = [
+	'pytest>=2.8',
+]
+
+setup_requires = [
+	'setuptools_scm>=1.9',
+] + pytest_runner + sphinx + wheel
+
 setup_params = dict(
 	name='jaraco.collections',
 	use_scm_version=True,
@@ -34,13 +42,11 @@ setup_params = dict(
 		'six>=1.7.0',
 	],
 	extras_require={
+		'tests': tests_require,
+		'setup': setup_requires,
 	},
-	setup_requires=[
-		'setuptools_scm>=1.9',
-	] + pytest_runner + sphinx + wheel,
-	tests_require=[
-		'pytest>=2.8',
-	],
+	setup_requires=setup_requires,
+	tests_require=tests_require,
 	classifiers=[
 		"Development Status :: 5 - Production/Stable",
 		"Intended Audience :: Developers",
