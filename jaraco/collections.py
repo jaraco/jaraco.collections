@@ -266,6 +266,10 @@ class KeyTransformingDict(dict):
 		key = self.transform_key(key)
 		return super(KeyTransformingDict, self).__delitem__(key)
 
+	def get(self, key, *args, **kwargs):
+		key = self.transform_key(key)
+		return super(KeyTransformingDict, self).get(key, *args, **kwargs)
+
 	def setdefault(self, key, *args, **kwargs):
 		key = self.transform_key(key)
 		return super(KeyTransformingDict, self).setdefault(key, *args, **kwargs)
@@ -320,6 +324,15 @@ class FoldedCaseKeyedDict(KeyTransformingDict):
 	>>> del d['HELLO']
 	>>> d
 	{}
+
+	get should work
+
+	>>> d['Sumthin'] = 'else'
+	>>> d.get('SUMTHIN')
+	'else'
+	>>> d.get('OTHER', 'thing')
+	'thing'
+	>>> del d['sumthin']
 
 	setdefault should also work
 
