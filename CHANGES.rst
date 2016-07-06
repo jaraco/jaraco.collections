@@ -1,3 +1,10 @@
+1.4
+===
+
+Added ``Least`` and ``Greatest`` classes, instances of
+which always compare lesser or greater than all other
+objects.
+
 1.3.2
 =====
 

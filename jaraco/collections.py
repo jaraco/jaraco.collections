@@ -771,3 +771,59 @@ class InstrumentedDict(six.moves.UserDict):
 	def __init__(self, data):
 		six.moves.UserDict.__init__(self)
 		self.data = data
+
+
+class Least(object):
+    """
+    A value that is always lesser than any other
+
+    >>> least = Least()
+    >>> 3 < least
+    False
+    >>> 3 > least
+    True
+    >>> least < 3
+    True
+    >>> least > 3
+    False
+    >>> 'x' > least
+    True
+    >>> None > least
+    True
+    """
+
+    def __lte__(self, other):
+        return True
+    __lt__ = __lte__
+
+    def __gte__(self, other):
+        return False
+    __gt__ = __gte__
+
+
+class Greatest(object):
+    """
+    A value that is always greater than any other
+
+    >>> greatest = Greatest()
+    >>> 3 < greatest
+    True
+    >>> 3 > greatest
+    False
+    >>> greatest < 3
+    False
+    >>> greatest > 3
+    True
+    >>> 'x' > greatest
+    False
+    >>> None > greatest
+    False
+    """
+
+    def __gte__(self, other):
+        return True
+    __gt__ = __gte__
+
+    def __lte__(self, other):
+        return False
+    __lt__ = __lte__
