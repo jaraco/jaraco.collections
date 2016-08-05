@@ -784,6 +784,8 @@ class Least(object):
     True
     >>> least < 3
     True
+    >>> least <= 3
+    True
     >>> least > 3
     False
     >>> 'x' > least
@@ -813,6 +815,8 @@ class Greatest(object):
     >>> greatest < 3
     False
     >>> greatest > 3
+    True
+    >>> greatest >= 3
     True
     >>> 'x' > greatest
     False
