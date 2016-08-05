@@ -1,3 +1,9 @@
+1.4.1
+=====
+
+#3: Fixed less-than-equal and greater-than-equal comparisons
+in ``Least`` and ``Greatest``.
+
 1.4
 ===
 

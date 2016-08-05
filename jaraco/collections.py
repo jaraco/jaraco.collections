@@ -794,13 +794,13 @@ class Least(object):
     True
     """
 
-    def __lte__(self, other):
+    def __le__(self, other):
         return True
-    __lt__ = __lte__
+    __lt__ = __le__
 
-    def __gte__(self, other):
+    def __ge__(self, other):
         return False
-    __gt__ = __gte__
+    __gt__ = __ge__
 
 
 class Greatest(object):
@@ -824,10 +824,10 @@ class Greatest(object):
     False
     """
 
-    def __gte__(self, other):
+    def __ge__(self, other):
         return True
-    __gt__ = __gte__
+    __gt__ = __ge__
 
-    def __lte__(self, other):
+    def __le__(self, other):
         return False
-    __lt__ = __lte__
+    __lt__ = __le__
