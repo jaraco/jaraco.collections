@@ -1,6 +1,3 @@
-jaraco.collections
-==================
-
 Models and classes to supplement the stdlib 'collections' module.
 
 .. image:: https://img.shields.io/pypi/v/jaraco.collections.svg
