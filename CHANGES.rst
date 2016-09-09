@@ -1,3 +1,9 @@
+1.5
+===
+
+Added a ``Projection`` class providing a much simpler
+interface than DictFilter.
+
 1.4.1
 =====
 
