@@ -784,6 +784,9 @@ class Everything(object):
 	>>> import random
 	>>> random.randint(1, 999) in Everything()
 	True
+
+	>>> random.choice([None, 'foo', 42, ('a', 'b', 'c')]) in Everything()
+	True
 	"""
 	def __contains__(self, other):
 		return True
