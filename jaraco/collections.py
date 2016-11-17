@@ -543,6 +543,7 @@ class DictStack(list, collections.Mapping):
 	>>> d = stack.pop()
 	>>> stack['a']
 	1
+	>>> stack.get('b', None)
 	"""
 
 	def keys(self):
