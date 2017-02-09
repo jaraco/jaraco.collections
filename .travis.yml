@@ -2,10 +2,9 @@ sudo: false
 language: python
 python:
 - 2.7
-- 3.5
+- 3.6
 install:
-- pip install tox
-- pip install https://github.com/pypa/setuptools/releases/download/v28.2.0b1/setuptools-28.2.0b1-py2.py3-none-any.whl
+- pip install tox "setuptools>=28.2"
 script:
 - tox
 branches:
@@ -17,8 +16,9 @@ deploy:
   on:
     tags: true
     all_branches: true
-    python: 3.5
+    python: 3.6
   user: jaraco
   distributions: dists
+  skip_upload_docs: true
   password:
     secure: H5SkLmo52n7lQZYwYjf1C57sjgQy0ZEfHMpHAyDKrlR3SVrdbyeS8z1ekQFeTgldB4KHLoBSu/vuK668xy3F6TpJDWxAvRvX6P3CJX/avw6RkNKLhKw01ud7ByfYXeGSzOFhtEewn/3+jTPOIPHjkQhhHQ1AkMZgyRm2xtuUn4hNPCZtp2q6pJkZP5nqlslMXdu6Guilug3XrLEZU1OpRkT/euKVJ97AN6/ArdF5OUCHezY/rp8/iHxdkD1nXkPqkETr3v6sYyQLGwLHnY5lpIpN6I3AdaeWX0JGapueCGMQv4Iq0hIs0yojQ51CtcNVV0uyIO6DjTP579SoZB3K7TnGMhWQoD3jAv8nZrLd22naZcb0HWR2CTfPw+d/+ylIZJqI/vsnfvMfgRgISnKX+vcesRHT95+/bWFIUN5X+Kb+3xAI7kCNT4HhltP6D5FJKPjhPwEA/fHfyoFZL6FwzvVEH/1C+8ruRJ3v9hiOEy0mOoUtMLqE7+AI0HYm/x/E/+9n3gQLD9lmD3wkNUoIXNo1S6dVE3EPIkbl3CvCc1HTahdOdC4j3QWKaaS2z6RAjMdQSfWcaIghB2pW2zifXx25Ww1grzswL++0AHjaCjljdhUxjzkqFURUfxZP4k6Ptq7PLA8kLyVaLFprRY/pJiG3b4C21+V6I05WkxLGv3o=

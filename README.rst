@@ -10,6 +10,10 @@ Models and classes to supplement the stdlib 'collections' module.
 .. image:: https://img.shields.io/travis/jaraco/jaraco.collections/master.svg
    :target: http://travis-ci.org/jaraco/jaraco.collections
 
+
+License
+=======
+
 License is indicated in the project metadata (typically one or more
 of the Trove classifiers). For more details, see `this explanation
 <https://github.com/jaraco/skeleton/issues/1>`_.
