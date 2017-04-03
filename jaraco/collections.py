@@ -27,6 +27,13 @@ class Projection(collections.Mapping):
 	>>> sorted(list(prj.keys()))
 	['a', 'c']
 
+	Use the projection to update another dict.
+
+	>>> target = {'a': 2, 'b': 2}
+	>>> target.update(prj)
+	>>> target == {'a': 1, 'b': 2, 'c': 3}
+	True
+
 	Also note that Projection keeps a reference to the original dict, so
 	if you modify the original dict, that could modify the Projection.
 
