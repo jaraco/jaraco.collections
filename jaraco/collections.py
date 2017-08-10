@@ -96,7 +96,6 @@ class DictFilter(object):
 			self.pattern_keys = set()
 
 	def get_pattern_keys(self):
-		#key_matches = lambda k, v: self.include_pattern.match(k)
 		keys = filter(self.include_pattern.match, self.dict.keys())
 		return set(keys)
 	pattern_keys = NonDataProperty(get_pattern_keys)
@@ -114,7 +113,7 @@ class DictFilter(object):
 		return values
 
 	def __getitem__(self, i):
-		if not i in self.include_keys:
+		if i not in self.include_keys:
 			return KeyError, i
 		return self.dict[i]
 
@@ -206,7 +205,7 @@ class RangeMap(dict):
 	>>> r.get(7, 'not found')
 	'not found'
 	"""
-	def __init__(self, source, sort_params = {}, key_match_comparator = operator.le):
+	def __init__(self, source, sort_params={}, key_match_comparator=operator.le):
 		dict.__init__(self, source)
 		self.sort_params = sort_params
 		self.match = key_match_comparator
@@ -249,7 +248,9 @@ class RangeMap(dict):
 
 	# some special values for the RangeMap
 	undefined_value = type(str('RangeValueUndefined'), (object,), {})()
-	class Item(int): pass
+
+	class Item(int):
+		"RangeMap Item"
 	first_item = Item(0)
 	last_item = Item(-1)
 
@@ -458,7 +459,11 @@ class ItemsAsAttributes(object):
 	It also works on dicts that customize __getitem__
 
 	>>> missing_func = lambda self, key: 'missing item'
-	>>> C = type(str('C'), (dict, ItemsAsAttributes), dict(__missing__ = missing_func))
+	>>> C = type(
+	...     str('C'),
+	...     (dict, ItemsAsAttributes),
+	...     dict(__missing__ = missing_func),
+	... )
 	>>> i = C()
 	>>> i.missing
 	'missing item'
@@ -472,6 +477,7 @@ class ItemsAsAttributes(object):
 			# attempt to get the value from the mapping (return self[key])
 			#  but be careful not to lose the original exception context.
 			noval = object()
+
 			def _safe_getitem(cont, key, missing_result):
 				try:
 					return cont[key]
@@ -504,7 +510,7 @@ def invert_map(map):
 	...
 	ValueError: Key conflict in inverted mapping
 	"""
-	res = dict((v,k) for k, v in map.items())
+	res = dict((v, k) for k, v in map.items())
 	if not len(res) == len(map):
 		raise ValueError('Key conflict in inverted mapping')
 	return res
@@ -558,7 +564,8 @@ class DictStack(list, collections.Mapping):
 
 	def __getitem__(self, key):
 		for scope in reversed(self):
-			if key in scope: return scope[key]
+			if key in scope:
+				return scope[key]
 		raise KeyError(key)
 
 	push = list.append
@@ -822,60 +829,60 @@ class InstrumentedDict(six.moves.UserDict):
 
 
 class Least(object):
-    """
-    A value that is always lesser than any other
+	"""
+	A value that is always lesser than any other
 
-    >>> least = Least()
-    >>> 3 < least
-    False
-    >>> 3 > least
-    True
-    >>> least < 3
-    True
-    >>> least <= 3
-    True
-    >>> least > 3
-    False
-    >>> 'x' > least
-    True
-    >>> None > least
-    True
-    """
+	>>> least = Least()
+	>>> 3 < least
+	False
+	>>> 3 > least
+	True
+	>>> least < 3
+	True
+	>>> least <= 3
+	True
+	>>> least > 3
+	False
+	>>> 'x' > least
+	True
+	>>> None > least
+	True
+	"""
 
-    def __le__(self, other):
-        return True
-    __lt__ = __le__
+	def __le__(self, other):
+		return True
+	__lt__ = __le__
 
-    def __ge__(self, other):
-        return False
-    __gt__ = __ge__
+	def __ge__(self, other):
+		return False
+	__gt__ = __ge__
 
 
 class Greatest(object):
-    """
-    A value that is always greater than any other
+	"""
+	A value that is always greater than any other
 
-    >>> greatest = Greatest()
-    >>> 3 < greatest
-    True
-    >>> 3 > greatest
-    False
-    >>> greatest < 3
-    False
-    >>> greatest > 3
-    True
-    >>> greatest >= 3
-    True
-    >>> 'x' > greatest
-    False
-    >>> None > greatest
-    False
-    """
+	>>> greatest = Greatest()
+	>>> 3 < greatest
+	True
+	>>> 3 > greatest
+	False
+	>>> greatest < 3
+	False
+	>>> greatest > 3
+	True
+	>>> greatest >= 3
+	True
+	>>> 'x' > greatest
+	False
+	>>> None > greatest
+	False
+	"""
 
-    def __ge__(self, other):
-        return True
-    __gt__ = __ge__
+	def __ge__(self, other):
+		return True
+	__gt__ = __ge__
 
-    def __le__(self, other):
-        return False
-    __lt__ = __le__
+	def __le__(self, other):
+		return False
+	__lt__ = __le__
