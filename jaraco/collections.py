@@ -639,7 +639,12 @@ class BijectiveMap(dict):
 	def __setitem__(self, item, value):
 		if item == value:
 			raise ValueError("Key cannot map to itself")
-		if (value in self or item in self) and self[item] != value:
+		overlap = (
+			item in self and self[item] != value
+			or
+			value in self and self[value] != item
+		)
+		if overlap:
 			raise ValueError("Key/Value pairs may not overlap")
 		super(BijectiveMap, self).__setitem__(item, value)
 		super(BijectiveMap, self).__setitem__(value, item)

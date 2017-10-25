@@ -1,3 +1,10 @@
+1.5.2
+=====
+
+Fixed KeyError in BijectiveMap when a new value matched
+an existing key (but not the reverse). Now a ValueError
+is raised as intended.
+
 1.5.1
 =====
 
