@@ -605,6 +605,10 @@ class BijectiveMap(dict):
 	Traceback (most recent call last):
 	ValueError: Key/Value pairs may not overlap
 
+	>>> m['e'] = 'd'
+	Traceback (most recent call last):
+	ValueError: Key/Value pairs may not overlap
+
 	>>> print(m.pop('d'))
 	c
 
