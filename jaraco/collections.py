@@ -7,6 +7,7 @@ import operator
 import collections
 import itertools
 import copy
+import functools
 
 import six
 from jaraco.classes.properties import NonDataProperty
@@ -233,7 +234,7 @@ class RangeMap(dict):
 			return default
 
 	def _find_first_match_(self, keys, item):
-		is_match = lambda k: self.match(item, k)
+		is_match = functools.partial(self.match, item)
 		matches = list(filter(is_match, keys))
 		if matches:
 			return matches[0]
@@ -255,7 +256,8 @@ class RangeMap(dict):
 	last_item = Item(-1)
 
 
-__identity = lambda x: x
+def __identity(x):
+	return x
 
 
 def sorted_items(d, key=__identity, reverse=False):
@@ -274,7 +276,8 @@ def sorted_items(d, key=__identity, reverse=False):
 	(('foo', 20), ('baz', 10), ('bar', 42))
 	"""
 	# wrap the key func so it operates on the first element of each item
-	pairkey_key = lambda item: key(item[0])
+	def pairkey_key(item):
+		return key(item[0])
 	return sorted(d.items(), key=pairkey_key, reverse=reverse)
 
 
