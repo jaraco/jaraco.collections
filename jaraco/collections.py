@@ -9,12 +9,18 @@ import itertools
 import copy
 import functools
 
+try:
+	import collections.abc
+except ImportError:
+	# Python 2.7
+	collections.abc = collections
+
 import six
 from jaraco.classes.properties import NonDataProperty
 import jaraco.text
 
 
-class Projection(collections.Mapping):
+class Projection(collections.abc.Mapping):
 	"""
 	Project a set of keys over a mapping
 
@@ -536,7 +542,7 @@ class IdentityOverrideMap(dict):
 		return key
 
 
-class DictStack(list, collections.Mapping):
+class DictStack(list, collections.abc.Mapping):
 	"""
 	A stack of dictionaries that behaves as a view on those dictionaries,
 	giving preference to the last.
@@ -671,7 +677,7 @@ class BijectiveMap(dict):
 			self.__setitem__(*item)
 
 
-class FrozenDict(collections.Mapping, collections.Hashable):
+class FrozenDict(collections.abc.Mapping, collections.abc.Hashable):
 	"""
 	An immutable mapping.
 
@@ -705,8 +711,8 @@ class FrozenDict(collections.Mapping, collections.Hashable):
 	>>> isinstance(copy.copy(a), FrozenDict)
 	True
 
-	FrozenDict supplies .copy(), even though collections.Mapping doesn't
-	demand it.
+	FrozenDict supplies .copy(), even though
+	collections.abc.Mapping doesn't demand it.
 
 	>>> a.copy() == a
 	True

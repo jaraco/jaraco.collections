@@ -1,3 +1,9 @@
+1.6.0
+=====
+
+Fix DeprecationWarnings when referencing abstract base
+classes from collections module.
+
 1.5.3
 =====
 
