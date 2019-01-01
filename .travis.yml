@@ -13,18 +13,13 @@ jobs:
   - stage: deploy
     if: tag IS present
     python: *latest_py3
-    install: skip
-    script: skip
-    deploy:
-      provider: pypi
-      on:
-        tags: true
-        all_branches: true
-      user: jaraco
-      password:
-        secure: H5SkLmo52n7lQZYwYjf1C57sjgQy0ZEfHMpHAyDKrlR3SVrdbyeS8z1ekQFeTgldB4KHLoBSu/vuK668xy3F6TpJDWxAvRvX6P3CJX/avw6RkNKLhKw01ud7ByfYXeGSzOFhtEewn/3+jTPOIPHjkQhhHQ1AkMZgyRm2xtuUn4hNPCZtp2q6pJkZP5nqlslMXdu6Guilug3XrLEZU1OpRkT/euKVJ97AN6/ArdF5OUCHezY/rp8/iHxdkD1nXkPqkETr3v6sYyQLGwLHnY5lpIpN6I3AdaeWX0JGapueCGMQv4Iq0hIs0yojQ51CtcNVV0uyIO6DjTP579SoZB3K7TnGMhWQoD3jAv8nZrLd22naZcb0HWR2CTfPw+d/+ylIZJqI/vsnfvMfgRgISnKX+vcesRHT95+/bWFIUN5X+Kb+3xAI7kCNT4HhltP6D5FJKPjhPwEA/fHfyoFZL6FwzvVEH/1C+8ruRJ3v9hiOEy0mOoUtMLqE7+AI0HYm/x/E/+9n3gQLD9lmD3wkNUoIXNo1S6dVE3EPIkbl3CvCc1HTahdOdC4j3QWKaaS2z6RAjMdQSfWcaIghB2pW2zifXx25Ww1grzswL++0AHjaCjljdhUxjzkqFURUfxZP4k6Ptq7PLA8kLyVaLFprRY/pJiG3b4C21+V6I05WkxLGv3o=
-      distributions: dists
-      skip_cleanup: true
+    before_script: skip
+    env:
+    - TWINE_USERNAME=jaraco
+    # TWINE_PASSWORD
+    - secure: n8qS4Tr+fQV89M4jtpdVG/eIb3Rcg9gmqGMDwn1C+OkNjr4MKZ2jJTO+bSecKz1k3XCoBaclJgAngm+2NxwgjJTWA+M+tOr9c5bAnu+5nSf+2izJULi7TSDyDHAob3YVtVZRbEOp5RgiRBvjLe5q0ZusZa+cA+61mlqJ1IdOoWGc6oQC2Q/dM7Zb6db7PXeUegb3Vs6wn0UrUEXxSXCePatNMeq1RkvVShoj1VzC2+jWBDI0NEFB8DxnfPgByxi/kVAjxVMmrKWZKahZ9RTUtmdIP2NvzF4/MJzVIXiwAOF9fivE1Yw5dMtRTEpuUp/SnIqwuNo+GON4vNNNBWEwG+CmUPKuPzi9m/z4ZcpzUA7c0RcSdiMjnUFQ7CzzNLt8LCNIPzbR3YMi6TCi0v4rs3uzhDknGbFEB1yR1i8yA7ICQPjX4Us6AHnBIBGfnC2p3JUBBKp/Hdkoo8+qwjGrdjUYAl1zhyoR29Ot4DuA+Bi+KytEakOugDyV/R/rqmbqy6HdwZRJnIt7cJK05AvedBqsMhgBwZ4xf1zFRqKGW1XoFMAEeoRxtn1lhKgpZp8lA/T9sZVymyUH+AQj/oIDAcH00vOYUvYUajL9rEet2WPdBwqhD3YwWxJQGOTxGeI/I/G4PvmgeEnw2HK4Q8EWmZYJu7XwiRn8zdQEeBr4Lvo=
+    - TOX_TESTENV_PASSENV="TWINE_USERNAME TWINE_PASSWORD"
+    script: tox -e release
 
 cache: pip
 
