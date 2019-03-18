@@ -566,6 +566,9 @@ class DictStack(list, collections.abc.Mapping):
 	>>> stack['a']
 	1
 	>>> stack.get('b', None)
+
+	>>> dict(**stack) == dict(a=1, c=2)
+	True
 	"""
 
 	def keys(self):
