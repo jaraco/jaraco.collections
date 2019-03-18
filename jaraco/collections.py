@@ -559,6 +559,8 @@ class DictStack(list, collections.abc.Mapping):
 	3
 	>>> set(stack.keys()) == set(['a', 'b', 'c'])
 	True
+	>>> dict(**stack) == dict(a=3, c=2, b=2)
+	True
 	>>> d = stack.pop()
 	>>> stack['a']
 	2
@@ -566,9 +568,6 @@ class DictStack(list, collections.abc.Mapping):
 	>>> stack['a']
 	1
 	>>> stack.get('b', None)
-
-	>>> dict(**stack) == dict(a=1, c=2)
-	True
 	"""
 
 	def keys(self):
