@@ -11,7 +11,7 @@ import functools
 
 try:
     import collections.abc
-except ImportError:
+except ImportError:  # pragma: nocover
     # Python 2.7
     collections.abc = collections
 
@@ -33,6 +33,14 @@ class Projection(collections.abc.Mapping):
 
     >>> sorted(list(prj.keys()))
     ['a', 'c']
+
+    Attempting to access a key not in the projection
+    results in a KeyError.
+
+    >>> prj['b']
+    Traceback (most recent call last):
+    ...
+    KeyError: 'b'
 
     Use the projection to update another dict.
 
@@ -73,6 +81,10 @@ class DictFilter(object):
     >>> filtered = DictFilter(sample, ['a', 'c'])
     >>> filtered == {'a': 1, 'c': 3}
     True
+    >>> set(filtered.values()) == {1, 3}
+    True
+    >>> set(filtered.items()) == {('a', 1), ('c', 3)}
+    True
 
     One can also filter by a regular expression pattern
 
@@ -85,6 +97,11 @@ class DictFilter(object):
     >>> filtered == {'a': 1, 'b': 2, 'c': 3, 'd': 4}
     True
 
+    >>> filtered['e']
+    Traceback (most recent call last):
+    ...
+    KeyError: 'e'
+
     Also note that DictFilter keeps a reference to the original dict, so
     if you modify the original dict, that could modify the filtered dict.
 
@@ -92,7 +109,8 @@ class DictFilter(object):
     >>> del sample['a']
     >>> filtered == {'b': 2, 'c': 3}
     True
-
+    >>> filtered != {'b': 2, 'c': 3}
+    False
     """
 
     def __init__(self, dict, include_keys=[], include_pattern=None):
@@ -118,13 +136,11 @@ class DictFilter(object):
         return self.include_keys.intersection(self.dict.keys())
 
     def values(self):
-        keys = self.keys()
-        values = map(self.dict.get, keys)
-        return values
+        return map(self.dict.get, self.keys())
 
     def __getitem__(self, i):
         if i not in self.include_keys:
-            return KeyError, i
+            raise KeyError(i)
         return self.dict[i]
 
     def items(self):
@@ -297,7 +313,7 @@ class KeyTransformingDict(dict):
     """
 
     @staticmethod
-    def transform_key(key):
+    def transform_key(key):  # pragma: nocover
         return key
 
     def __init__(self, *args, **kargs):
@@ -415,6 +431,11 @@ class FoldedCaseKeyedDict(KeyTransformingDict):
 
     >>> print(d.matching_key_for('this'))
     This
+
+    >>> d.matching_key_for('missing')
+    Traceback (most recent call last):
+    ...
+    KeyError: 'missing'
     """
 
     @staticmethod
@@ -702,6 +723,16 @@ class FrozenDict(collections.abc.Mapping, collections.abc.Hashable):
     True
     >>> dict(a=1, b=2) == a
     True
+    >>> 'a' in a
+    True
+    >>> type(hash(a)) is type(0)
+    True
+    >>> set(iter(a)) == {'a', 'b'}
+    True
+    >>> len(a)
+    2
+    >>> a['a'] == a.get('a') == 1
+    True
 
     >>> a['c'] = 3
     Traceback (most recent call last):
@@ -745,7 +776,7 @@ class FrozenDict(collections.abc.Mapping, collections.abc.Hashable):
 
     # Hashable
     def __hash__(self):
-        return hash(tuple(sorted(self.__data.iteritems())))
+        return hash(tuple(sorted(six.iteritems(self.__data))))
 
     # Mapping
     def __iter__(self):
