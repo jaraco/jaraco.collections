@@ -906,3 +906,20 @@ class Greatest(object):
 	def __le__(self, other):
 		return False
 	__lt__ = __le__
+
+
+def pop_all(items):
+	"""
+	Clear items in place and return a copy of items.
+
+	>>> items = [1, 2, 3]
+	>>> popped = pop_all(items)
+	>>> popped is items
+	False
+	>>> popped
+	[1, 2, 3]
+	>>> items
+	[]
+	"""
+	result, items[:] = items[:], []
+	return result
