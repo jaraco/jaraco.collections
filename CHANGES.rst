@@ -1,3 +1,8 @@
+2.1
+===
+
+Added ``pop_all`` function.
+
 2.0
 ===
 
