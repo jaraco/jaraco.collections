@@ -1,21 +1,10 @@
-# -*- coding: utf-8 -*-
-
-from __future__ import absolute_import, unicode_literals, division
-
 import re
 import operator
-import collections
+import collections.abc
 import itertools
 import copy
 import functools
 
-try:
-    import collections.abc
-except ImportError:  # pragma: nocover
-    # Python 2.7
-    collections.abc = collections
-
-import six
 from jaraco.classes.properties import NonDataProperty
 import jaraco.text
 
@@ -776,7 +765,7 @@ class FrozenDict(collections.abc.Mapping, collections.abc.Hashable):
 
     # Hashable
     def __hash__(self):
-        return hash(tuple(sorted(six.iteritems(self.__data))))
+        return hash(tuple(sorted(self.__data.items())))
 
     # Mapping
     def __iter__(self):
@@ -837,7 +826,7 @@ class Enumeration(ItemsAsAttributes, BijectiveMap):
     """
 
     def __init__(self, names, codes=None):
-        if isinstance(names, six.string_types):
+        if isinstance(names, str):
             names = names.split()
         if codes is None:
             codes = itertools.count()
@@ -845,7 +834,7 @@ class Enumeration(ItemsAsAttributes, BijectiveMap):
 
     @property
     def names(self):
-        return (key for key in self if isinstance(key, six.string_types))
+        return (key for key in self if isinstance(key, str))
 
     @property
     def codes(self):
@@ -871,7 +860,7 @@ class Everything(object):
         return True
 
 
-class InstrumentedDict(six.moves.UserDict):
+class InstrumentedDict(collections.UserDict):
     """
     Instrument an existing dictionary with additional
     functionality, but always reference and mutate
@@ -889,7 +878,7 @@ class InstrumentedDict(six.moves.UserDict):
     """
 
     def __init__(self, data):
-        six.moves.UserDict.__init__(self)
+        super().__init__()
         self.data = data
 
 
