@@ -515,7 +515,7 @@ class ItemsAsAttributes(object):
                 return result
             # raise the original exception, but use the original class
             #  name, not 'super'.
-            message, = e.args
+            (message,) = e.args
             message = message.replace('super', self.__class__.__name__, 1)
             e.args = (message,)
             raise
