@@ -19,7 +19,21 @@
 
 Models and classes to supplement the stdlib 'collections' module.
 
-RangeMap
---------
+See the docs, linked above, for descriptions and usage examples.
 
-A dictionary-like object that maps a range of values to a given value.
+Highlights include:
+
+- RangeMap: A mapping that accepts a range of values for keys.
+- Projection: A subset over an existing mapping.
+- DictFilter: A different implementation of a projection.
+- KeyTransformingDict: Generalized mapping with keys transformed by a function.
+- FoldedCaseKeyedDict: A dict whose string keys are case-insensitive.
+- BijectiveMap: A map where keys map to values and values back to their keys.
+- ItemsAsAttributes: A mapping mix-in exposing items as attributes.
+- IdentityOverrideMap: A map whose keys map by default to themselves unless overridden.
+- FrozenDict: A hashable, immutable map.
+- Enumeration: An object whose keys are enumerated.
+- Everything: A container that contains all things.
+- Least, Greatest: Objects that are always less than or greater than any other.
+- pop_all: Return all items from the mutable sequence and remove them from that sequence.
+- DictStack: A stack of dicts, great for sharing scopes.
