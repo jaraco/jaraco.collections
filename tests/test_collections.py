@@ -1,5 +1,3 @@
-import six
-
 from jaraco import collections
 
 
@@ -11,7 +9,7 @@ class AlwaysStringKeysDict(collections.KeyTransformingDict):
 
     @staticmethod
     def transform_key(key):
-        return six.text_type(key)
+        return str(key)
 
 
 def test_always_lower_keys_dict():
@@ -23,7 +21,7 @@ def test_always_lower_keys_dict():
     d['Lasting'] = 'fleeting'
     d[3] = 'three'
     d[{'a': 1}] = 'a is one'
-    assert all(isinstance(key, six.text_type) for key in d)
+    assert all(isinstance(key, str) for key in d)
     assert "{'a': 1}" in d
     assert 3 in d
     assert d[3] == d['3'] == 'three'
