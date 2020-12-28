@@ -1,3 +1,8 @@
+v3.1.0
+======
+
+Refreshed packaging. Dropped dependency on six.
+
 v3.0.0
 ======
 
