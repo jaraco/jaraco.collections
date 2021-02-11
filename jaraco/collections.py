@@ -860,7 +860,7 @@ class Everything(object):
         return True
 
 
-class InstrumentedDict(collections.UserDict):
+class InstrumentedDict(collections.UserDict):  # type: ignore  # buggy mypy
     """
     Instrument an existing dictionary with additional
     functionality, but always reference and mutate
