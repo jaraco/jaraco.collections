@@ -1,3 +1,8 @@
+v3.3.0
+======
+
+Add ``FreezableDefaultDict``.
+
 v3.2.0
 ======
 
