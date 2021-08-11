@@ -40,3 +40,4 @@ Highlights include:
 - Least, Greatest: Objects that are always less than or greater than any other.
 - pop_all: Return all items from the mutable sequence and remove them from that sequence.
 - DictStack: A stack of dicts, great for sharing scopes.
+- WeightedLookup: A specialized RangeMap for selecting an item by weights.
