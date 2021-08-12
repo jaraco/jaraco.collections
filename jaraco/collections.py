@@ -593,7 +593,9 @@ class DictStack(list, collections.abc.Mapping):
         return list(set(itertools.chain.from_iterable(c.keys() for c in self)))
 
     def __getitem__(self, key):
-        for scope in reversed(self):
+        # Iterating over self causes PyPy3 to call __getitem__, leading
+        # to infinite recursion.  Convert to plain list first.
+        for scope in reversed(list(self)):
             if key in scope:
                 return scope[key]
         raise KeyError(key)
