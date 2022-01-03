@@ -7,6 +7,8 @@ v3.5.0
  - casting to a dict
  - ``__contains__`` (i.e. "x in stack")
 
+Require Python 3.7 or later.
+
 v3.4.0
 ======
 
