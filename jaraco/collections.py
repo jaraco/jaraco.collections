@@ -589,6 +589,8 @@ class DictStack(list, collections.abc.Mapping):
     >>> stack['a']
     1
     >>> stack.get('b', None)
+    >>> 'c' in stack
+    True
     """
 
     def __iter__(self):
@@ -602,6 +604,9 @@ class DictStack(list, collections.abc.Mapping):
         raise KeyError(key)
 
     push = list.append
+
+    def __contains__(self, other):
+        return collections.abc.Mapping.__contains__(self, other)
 
 
 class BijectiveMap(dict):

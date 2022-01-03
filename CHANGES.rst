@@ -1,7 +1,11 @@
 v3.5.0
 ======
 
-``DictStack`` now supports ``.items()`` and casting to a dict.
+``DictStack`` now supports the following Mapping behaviors:
+
+ - ``.items()``
+ - casting to a dict
+ - ``__contains__`` (i.e. "x in stack")
 
 v3.4.0
 ======
