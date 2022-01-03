@@ -6,7 +6,6 @@ import copy
 import functools
 import random
 
-from more_itertools import unique_everseen
 from jaraco.classes.properties import NonDataProperty
 import jaraco.text
 
@@ -594,7 +593,7 @@ class DictStack(list, collections.abc.Mapping):
 
     def __iter__(self):
         dicts = list.__iter__(self)
-        return unique_everseen(itertools.chain.from_iterable(c.keys() for c in dicts))
+        return iter(set(itertools.chain.from_iterable(c.keys() for c in dicts)))
 
     def __getitem__(self, key):
         for scope in reversed(self):
