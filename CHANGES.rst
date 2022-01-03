@@ -1,3 +1,8 @@
+v3.5.0
+======
+
+``DictStack`` now supports ``.items()`` and casting to a dict.
+
 v3.4.0
 ======
 

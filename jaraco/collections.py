@@ -6,6 +6,7 @@ import copy
 import functools
 import random
 
+from more_itertools import unique_everseen
 from jaraco.classes.properties import NonDataProperty
 import jaraco.text
 
@@ -578,7 +579,9 @@ class DictStack(list, collections.abc.Mapping):
     3
     >>> set(stack.keys()) == set(['a', 'b', 'c'])
     True
-    >>> dict(**stack) == dict(a=3, c=2, b=2)
+    >>> set(stack.items()) == set([('a', 3), ('b', 2), ('c', 2)])
+    True
+    >>> dict(**stack) == dict(stack) == dict(a=3, c=2, b=2)
     True
     >>> d = stack.pop()
     >>> stack['a']
@@ -589,8 +592,9 @@ class DictStack(list, collections.abc.Mapping):
     >>> stack.get('b', None)
     """
 
-    def keys(self):
-        return list(set(itertools.chain.from_iterable(c.keys() for c in self)))
+    def __iter__(self):
+        dicts = list.__iter__(self)
+        return unique_everseen(itertools.chain.from_iterable(c.keys() for c in dicts))
 
     def __getitem__(self, key):
         for scope in reversed(self):
