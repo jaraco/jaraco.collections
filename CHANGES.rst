@@ -1,3 +1,9 @@
+v3.5.1
+======
+
+Fixed ``DictStack.__len__`` and addressed recursion error on
+PyPy in ``__getitem__``.
+
 v3.5.0
 ======
 
