@@ -1,3 +1,10 @@
+v3.5.2
+======
+
+Packaging refresh.
+
+Enrolled with Tidelift.
+
 v3.5.1
 ======
 
