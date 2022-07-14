@@ -20,6 +20,9 @@
 .. image:: https://img.shields.io/badge/skeleton-2022-informational
    :target: https://blog.jaraco.com/skeleton
 
+.. image:: https://tidelift.com/badges/package/pypi/jaraco.collections
+   :target: https://tidelift.com/subscription/pkg/pypi-jaraco.collections?utm_source=pypi-jaraco.collections&utm_medium=readme
+
 Models and classes to supplement the stdlib 'collections' module.
 
 See the docs, linked above, for descriptions and usage examples.
@@ -41,3 +44,19 @@ Highlights include:
 - pop_all: Return all items from the mutable sequence and remove them from that sequence.
 - DictStack: A stack of dicts, great for sharing scopes.
 - WeightedLookup: A specialized RangeMap for selecting an item by weights.
+
+For Enterprise
+==============
+
+Available as part of the Tidelift Subscription.
+
+This project and the maintainers of thousands of other packages are working with Tidelift to deliver one enterprise subscription that covers all of the open source you use.
+
+`Learn more <https://tidelift.com/subscription/pkg/pypi-jaraco.collections?utm_source=pypi-jaraco.collections&utm_medium=referral&utm_campaign=github>`_.
+
+Security Contact
+================
+
+To report a security vulnerability, please use the
+`Tidelift security contact <https://tidelift.com/security>`_.
+Tidelift will coordinate the fix and disclosure.
