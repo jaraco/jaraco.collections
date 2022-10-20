@@ -370,7 +370,7 @@ class FoldedCaseKeyedDict(KeyTransformingDict):
     True
     >>> 'HELLO' in d
     True
-    >>> print(repr(FoldedCaseKeyedDict({'heLlo': 'world'})).replace("u'", "'"))
+    >>> print(repr(FoldedCaseKeyedDict({'heLlo': 'world'})))
     {'heLlo': 'world'}
     >>> d = FoldedCaseKeyedDict({'heLlo': 'world'})
     >>> print(d['hello'])
