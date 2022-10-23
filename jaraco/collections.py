@@ -5,7 +5,9 @@ import itertools
 import copy
 import functools
 import random
+from typing import Any, Union
 
+from more_itertools import consume
 from jaraco.classes.properties import NonDataProperty
 import jaraco.text
 
@@ -1054,3 +1056,45 @@ class WeightedLookup(RangeMap):
         lower, upper = self.bounds()
         selector = random.random() * upper
         return self[selector]
+
+
+@functools.singledispatch
+def _make_predicate(param: Union[str, callable]) -> callable:
+    return param
+
+
+@_make_predicate.register
+def _(param: str):
+    return _make_predicate(re.compile(param))
+
+
+@_make_predicate.register
+def _(param: re.Pattern):
+    return param.match
+
+
+def remove_matching(
+    orig: collections.abc.MutableMapping[Any:Any], predicate: Union[str, callable]
+):
+    """
+    Remove items from orig that match the predicate.
+
+    >>> d = dict(zip('abcdefg', range(1, 8)))
+    >>> remove_matching(d, lambda val: val == 'a')
+    >>> d
+    {'b': 2, 'c': 3, 'd': 4, 'e': 5, 'f': 6}
+    >>> remove_matching(d, r'[bcd]')
+    >>> d
+    {'e': 5, 'f': 6, 'g': 7}
+    """
+    remove_keys(orig, filter(_make_predicate(predicate), orig))
+
+
+def remove_keys(target: collections.abc.MutableMapping, keys):
+    """
+    >>> d = dict(zip('abc', range(1, 4)))
+    >>> remove_keys(d, ('a', 'c'))
+    >>> d
+    {'b': 2}
+    """
+    consume(map(target.__delitem__, tuple(keys)))
