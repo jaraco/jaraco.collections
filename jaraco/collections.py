@@ -126,7 +126,7 @@ class DictFilter(collections.abc.Mapping):
 
     @property
     def include_keys(self):
-        return self.specified_keys.union(self.pattern_keys)
+        return self.specified_keys | self.pattern_keys
 
     def values(self):
         return map(self.dict.get, self.keys())
