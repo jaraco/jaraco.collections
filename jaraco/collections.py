@@ -92,6 +92,10 @@ class DictFilter(object):
     ...
     KeyError: 'e'
 
+    # failing
+    # >>> 'e' in filtered
+    # False
+
     Also note that DictFilter keeps a reference to the original dict, so
     if you modify the original dict, that could modify the filtered dict.
 
