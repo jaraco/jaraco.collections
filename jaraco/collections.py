@@ -128,9 +128,6 @@ class DictFilter(collections.abc.Mapping):
     def include_keys(self):
         return self.specified_keys | self.pattern_keys
 
-    def values(self):
-        return map(self.dict.get, self.keys())
-
     def __getitem__(self, i):
         if i not in self.include_keys:
             raise KeyError(i)
