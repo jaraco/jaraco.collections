@@ -95,15 +95,18 @@ class DictFilter(collections.abc.Mapping):
     >>> 'e' in filtered
     False
 
+    Pattern is useful for excluding keys with a prefix.
+
+    >>> filtered = DictFilter(sample, include_pattern=r'(?![ace])')
+    >>> filtered == {'b': 2, 'd': 4}
+    True
+
     Also note that DictFilter keeps a reference to the original dict, so
     if you modify the original dict, that could modify the filtered dict.
 
     >>> del sample['d']
-    >>> del sample['a']
-    >>> filtered == {'b': 2, 'c': 3}
-    True
-    >>> filtered != {'b': 2, 'c': 3}
-    False
+    >>> dict(filtered)
+    {'b': 2}
     """
 
     def __init__(self, dict, include_keys=[], include_pattern=None):
