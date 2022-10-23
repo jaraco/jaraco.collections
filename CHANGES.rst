@@ -1,3 +1,11 @@
+v3.6.0
+======
+
+Revised ``DictFilter``:
+
+ - Fixed issue where ``DictFilter.__contains__`` would raise a ``KeyError``.
+ - Relies heavily now on ``collections.abc.Mapping`` base class.
+
 v3.5.2
 ======
 
