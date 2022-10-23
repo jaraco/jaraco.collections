@@ -63,7 +63,7 @@ class Projection(collections.abc.Mapping):
         return len(tuple(iter(self)))
 
 
-class DictFilter(object):
+class DictFilter(collections.abc.Mapping):
     """
     Takes a dict, and simulates a sub-dict based on the keys.
 
@@ -92,9 +92,8 @@ class DictFilter(object):
     ...
     KeyError: 'e'
 
-    # failing
-    # >>> 'e' in filtered
-    # False
+    >>> 'e' in filtered
+    False
 
     Also note that DictFilter keeps a reference to the original dict, so
     if you modify the original dict, that could modify the filtered dict.
@@ -126,9 +125,6 @@ class DictFilter(object):
     def include_keys(self):
         return self.specified_keys.union(self.pattern_keys)
 
-    def keys(self):
-        return self.include_keys.intersection(self.dict.keys())
-
     def values(self):
         return map(self.dict.get, self.keys())
 
@@ -137,16 +133,11 @@ class DictFilter(object):
             raise KeyError(i)
         return self.dict[i]
 
-    def items(self):
-        keys = self.keys()
-        values = map(self.dict.get, keys)
-        return zip(keys, values)
+    def __iter__(self):
+        return iter(self.include_keys.intersection(self.dict.keys()))
 
-    def __eq__(self, other):
-        return dict(self) == other
-
-    def __ne__(self, other):
-        return dict(self) != other
+    def __len__(self):
+        return len(list(self))
 
 
 def dict_map(function, dictionary):
