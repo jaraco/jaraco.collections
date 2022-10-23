@@ -98,8 +98,8 @@ class DictFilter(collections.abc.Mapping):
     Pattern is useful for excluding keys with a prefix.
 
     >>> filtered = DictFilter(sample, include_pattern=r'(?![ace])')
-    >>> filtered == {'b': 2, 'd': 4}
-    True
+    >>> dict(filtered)
+    {'b': 2, 'd': 4}
 
     Also note that DictFilter keeps a reference to the original dict, so
     if you modify the original dict, that could modify the filtered dict.
@@ -137,7 +137,7 @@ class DictFilter(collections.abc.Mapping):
         return self.dict[i]
 
     def __iter__(self):
-        return iter(self.include_keys.intersection(self.dict.keys()))
+        return filter(self.include_keys.__contains__, self.dict.keys())
 
     def __len__(self):
         return len(list(self))
