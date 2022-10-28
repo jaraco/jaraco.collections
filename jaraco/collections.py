@@ -428,7 +428,7 @@ class FoldedCaseKeyedDict(KeyTransformingDict):
         return jaraco.text.FoldedCase(key)
 
 
-class DictAdapter(object):
+class DictAdapter:
     """
     Provide a getitem interface for attributes of an object.
 
@@ -447,7 +447,7 @@ class DictAdapter(object):
         return getattr(self.object, name)
 
 
-class ItemsAsAttributes(object):
+class ItemsAsAttributes:
     """
     Mix-in class to enable a mapping object to provide items as
     attributes.
@@ -850,7 +850,7 @@ class Enumeration(ItemsAsAttributes, BijectiveMap):
         return (self[name] for name in self.names)
 
 
-class Everything(object):
+class Everything:
     """
     A collection "containing" every possible thing.
 
@@ -891,7 +891,7 @@ class InstrumentedDict(collections.UserDict):  # type: ignore  # buggy mypy
         self.data = data
 
 
-class Least(object):
+class Least:
     """
     A value that is always lesser than any other
 
@@ -923,7 +923,7 @@ class Least(object):
     __gt__ = __ge__
 
 
-class Greatest(object):
+class Greatest:
     """
     A value that is always greater than any other
 
