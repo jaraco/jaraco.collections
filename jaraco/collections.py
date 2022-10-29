@@ -162,7 +162,7 @@ class RangeMap(dict):
     the sorted list of keys.
 
     One may supply keyword parameters to be passed to the sort function used
-    to sort keys (i.e. cmp [python 2 only], keys, reverse) as sort_params.
+    to sort keys (i.e. key, reverse) as sort_params.
 
     Let's create a map that maps 1-3 -> 'a', 4-6 -> 'b'
 
@@ -256,7 +256,7 @@ class RangeMap(dict):
         return (sorted_keys[RangeMap.first_item], sorted_keys[RangeMap.last_item])
 
     # some special values for the RangeMap
-    undefined_value = type(str('RangeValueUndefined'), (object,), {})()
+    undefined_value = type(str('RangeValueUndefined'), (), {})()
 
     class Item(int):
         "RangeMap Item"
