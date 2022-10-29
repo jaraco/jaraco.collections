@@ -215,12 +215,35 @@ class RangeMap(dict):
 
     >>> r.get(7, 'not found')
     'not found'
+
+    One often wishes to define the ranges by their left-most values,
+    which requires use of sort params and a key_match_comparator.
+
+    >>> r = RangeMap({1: 'a', 4: 'b'},
+    ...     sort_params=dict(reverse=True),
+    ...     key_match_comparator=operator.ge)
+    >>> r[1], r[2], r[3], r[4], r[5], r[6]
+    ('a', 'a', 'a', 'b', 'b', 'b')
+
+    That wasn't nearly as easy as before, so an alternate constructor
+    is provided:
+
+    >>> r = RangeMap.left({1: 'a', 4: 'b', 7: RangeMap.undefined_value})
+    >>> r[1], r[2], r[3], r[4], r[5], r[6]
+    ('a', 'a', 'a', 'b', 'b', 'b')
+
     """
 
     def __init__(self, source, sort_params={}, key_match_comparator=operator.le):
         dict.__init__(self, source)
         self.sort_params = sort_params
         self.match = key_match_comparator
+
+    @classmethod
+    def left(cls, source):
+        return cls(
+            source, sort_params=dict(reverse=True), key_match_comparator=operator.ge
+        )
 
     def __getitem__(self, item):
         sorted_keys = sorted(self.keys(), **self.sort_params)
