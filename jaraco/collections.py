@@ -579,7 +579,7 @@ class IdentityOverrideMap(dict):
         return key
 
 
-class DictStack(list, collections.abc.Mapping):
+class DictStack(list, collections.abc.MutableMapping):
     """
     A stack of dictionaries that behaves as a view on those dictionaries,
     giving preference to the last.
@@ -596,11 +596,12 @@ class DictStack(list, collections.abc.Mapping):
     >>> stack.push(dict(a=3))
     >>> stack['a']
     3
+    >>> stack['a'] = 4
     >>> set(stack.keys()) == set(['a', 'b', 'c'])
     True
-    >>> set(stack.items()) == set([('a', 3), ('b', 2), ('c', 2)])
+    >>> set(stack.items()) == set([('a', 4), ('b', 2), ('c', 2)])
     True
-    >>> dict(**stack) == dict(stack) == dict(a=3, c=2, b=2)
+    >>> dict(**stack) == dict(stack) == dict(a=4, c=2, b=2)
     True
     >>> d = stack.pop()
     >>> stack['a']
@@ -611,6 +612,9 @@ class DictStack(list, collections.abc.Mapping):
     >>> stack.get('b', None)
     >>> 'c' in stack
     True
+    >>> del stack['c']
+    >>> dict(stack)
+    {'a': 1}
     """
 
     def __iter__(self):
@@ -630,6 +634,18 @@ class DictStack(list, collections.abc.Mapping):
 
     def __len__(self):
         return len(list(iter(self)))
+
+    def __setitem__(self, key, item):
+        last = list.__getitem__(self, -1)
+        return last.__setitem__(key, item)
+
+    def __delitem__(self, key):
+        last = list.__getitem__(self, -1)
+        return last.__delitem__(key)
+
+    # workaround for mypy confusion
+    def pop(self, *args, **kwargs):
+        return list.pop(self, *args, **kwargs)
 
 
 class BijectiveMap(dict):

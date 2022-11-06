@@ -1,3 +1,8 @@
+v3.8.0
+======
+
+Made ``DictStack`` mutable.
+
 v3.7.0
 ======
 
