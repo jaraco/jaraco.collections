@@ -279,7 +279,7 @@ class RangeMap(dict):
         return (sorted_keys[RangeMap.first_item], sorted_keys[RangeMap.last_item])
 
     # some special values for the RangeMap
-    undefined_value = type(str('RangeValueUndefined'), (), {})()
+    undefined_value = type('RangeValueUndefined', (), {})()
 
     class Item(int):
         "RangeMap Item"
@@ -307,6 +307,7 @@ def sorted_items(d, key=__identity, reverse=False):
     >>> tuple(sorted_items(sample, reverse=True))
     (('foo', 20), ('baz', 10), ('bar', 42))
     """
+
     # wrap the key func so it operates on the first element of each item
     def pairkey_key(item):
         return key(item[0])
@@ -475,7 +476,7 @@ class ItemsAsAttributes:
     Mix-in class to enable a mapping object to provide items as
     attributes.
 
-    >>> C = type(str('C'), (dict, ItemsAsAttributes), dict())
+    >>> C = type('C', (dict, ItemsAsAttributes), dict())
     >>> i = C()
     >>> i['foo'] = 'bar'
     >>> i.foo
@@ -504,7 +505,7 @@ class ItemsAsAttributes:
 
     >>> missing_func = lambda self, key: 'missing item'
     >>> C = type(
-    ...     str('C'),
+    ...     'C',
     ...     (dict, ItemsAsAttributes),
     ...     dict(__missing__ = missing_func),
     ... )
