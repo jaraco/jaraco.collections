@@ -137,7 +137,7 @@ class DictFilter(collections.abc.Mapping):
         return filter(self.include_keys.__contains__, self.dict.keys())
 
     def __len__(self):
-        return len(list(self))
+        return len(self.include_keys & self.dict.keys())
 
 
 def dict_map(function, dictionary):

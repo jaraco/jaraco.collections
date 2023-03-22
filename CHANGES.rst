@@ -1,3 +1,9 @@
+v3.9.0
+======
+
+``DictFilter.__len__`` no longer relies on the iterable. Improves
+efficiency and fixes ``RecursionError`` on PyPy (#12).
+
 v3.8.0
 ======
 
