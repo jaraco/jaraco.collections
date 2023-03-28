@@ -1,3 +1,9 @@
+v3.10.0
+=======
+
+In ``Projection``, harmonize the implementation and optimize using
+``set`` instead of ``tuple``.
+
 v3.9.0
 ======
 
