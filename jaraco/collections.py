@@ -56,11 +56,14 @@ class Projection(collections.abc.Mapping):
             raise KeyError(key)
         return self._space[key]
 
+    def _keys_resolved(self):
+        return set(self._keys).intersection(self._space)
+
     def __iter__(self):
-        return iter(set(self._keys).intersection(self._space))
+        return iter(self._keys_resolved())
 
     def __len__(self):
-        return len(tuple(iter(self)))
+        return len(self._keys_resolved())
 
 
 class DictFilter(collections.abc.Mapping):
