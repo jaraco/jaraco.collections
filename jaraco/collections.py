@@ -67,7 +67,7 @@ class Projection(collections.abc.Mapping):
         return len(self._keys_resolved())
 
 
-class DictFilter(collections.abc.Mapping):
+class DictFilter(Projection):
     """
     Takes a dict, and simulates a sub-dict based on the keys.
 
@@ -116,34 +116,23 @@ class DictFilter(collections.abc.Mapping):
     """
 
     def __init__(self, dict, include_keys=[], include_pattern=None):
-        self.dict = dict
-        self.specified_keys = set(include_keys)
+        self._space = dict
+        self._spec_keys = set(include_keys)
         if include_pattern is not None:
-            self.include_pattern = re.compile(include_pattern)
+            self._include_pattern = re.compile(include_pattern)
         else:
             # for performance, replace the pattern_keys property
-            self.pattern_keys = set()
-
-    def get_pattern_keys(self):
-        keys = filter(self.include_pattern.match, self.dict.keys())
-        return set(keys)
-
-    pattern_keys = NonDataProperty(get_pattern_keys)
+            self._pattern_keys = set()
 
     @property
-    def include_keys(self):
-        return self.specified_keys | self.pattern_keys
+    def _keys(self):
+        return self._spec_keys | self._pattern_keys
 
-    def __getitem__(self, i):
-        if i not in self.include_keys:
-            raise KeyError(i)
-        return self.dict[i]
+    def _get_pattern_keys(self):
+        keys = filter(self._include_pattern.match, self._space)
+        return set(keys)
 
-    def __iter__(self):
-        return filter(self.include_keys.__contains__, self.dict.keys())
-
-    def __len__(self):
-        return len(self.include_keys & self.dict.keys())
+    _pattern_keys = NonDataProperty(_get_pattern_keys)
 
 
 def dict_map(function, dictionary):
