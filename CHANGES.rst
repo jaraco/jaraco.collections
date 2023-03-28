@@ -1,3 +1,9 @@
+v4.0.0
+======
+
+``DictFilter`` no longer accepts ``include_keys`` and requires
+``include_pattern`` as a keyword argument.
+
 v3.11.0
 =======
 

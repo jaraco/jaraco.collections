@@ -5,10 +5,8 @@ import itertools
 import copy
 import functools
 import random
-import warnings
 from collections.abc import Mapping, Iterable
 
-from jaraco.classes.properties import NonDataProperty
 import jaraco.text
 
 
@@ -102,37 +100,13 @@ class DictFilter(Projection):
     {'b': 2}
     """
 
-    def __init__(self, dict, include_keys=[], include_pattern=None):
+    def __init__(self, dict, *, include_pattern):
         self._space = dict
-        if include_keys:
-            warnings.warn(
-                "Passing include_keys to DictFilter is deprecated. "
-                "Wrap the mapping in Projection instead.",
-                DeprecationWarning,
-                stacklevel=2,
-            )
-        self._spec_keys = set(include_keys)
-        if include_pattern is not None:
-            self._include_pattern = re.compile(include_pattern)
-        else:
-            warnings.warn(
-                "Not specifying an include pattern is deprecated. "
-                "Use a Projection instead.",
-                DeprecationWarning,
-                stacklevel=2,
-            )
-            # for performance, replace the pattern_keys property
-            self._pattern_keys = set()
+        self._include_pattern = re.compile(include_pattern)
 
     @property
     def _keys(self):
-        return self._spec_keys | self._pattern_keys
-
-    def _get_pattern_keys(self):
-        keys = filter(self._include_pattern.match, self._space)
-        return set(keys)
-
-    _pattern_keys = NonDataProperty(_get_pattern_keys)
+        return set(filter(self._include_pattern.match, self._space))
 
 
 def dict_map(function, dictionary):
