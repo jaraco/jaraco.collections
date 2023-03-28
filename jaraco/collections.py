@@ -79,6 +79,8 @@ class DictFilter(collections.abc.Mapping):
     True
     >>> set(filtered.items()) == {('a', 1), ('c', 3)}
     True
+    >>> len(filtered)
+    2
 
     One can also filter by a regular expression pattern
 
