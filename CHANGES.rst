@@ -1,3 +1,18 @@
+v3.11.0
+=======
+
+In ``DictFilter``, deprecated ``include_keys`` parameter and usage
+without ``include_pattern``. Future versions will honor
+``include_pattern`` as a required keyword argument. All other
+uses are deprecated. For uses that currently rely on ``include_keys``,
+use ``Projection`` instead/in addition. For example, instead of::
+
+    filtered = DictFilter(orig, include_keys=['a'], include_pattern='b+')
+
+Use::
+
+    filtered = DictFilter(Projection(['a'], orig), include_pattern='b+')
+
 v3.10.0
 =======
 

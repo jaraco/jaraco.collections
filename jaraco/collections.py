@@ -5,6 +5,7 @@ import itertools
 import copy
 import functools
 import random
+import warnings
 from collections.abc import Mapping, Iterable
 
 from jaraco.classes.properties import NonDataProperty
@@ -69,25 +70,11 @@ class Projection(collections.abc.Mapping):
 
 class DictFilter(Projection):
     """
-    Takes a dict, and simulates a sub-dict based on the keys.
+    Takes a dict and simulates a sub-dict based on a pattern.
 
-    >>> sample = dict(a=1, b=2, c=3)
-    >>> filtered = DictFilter(sample, ['a', 'c'])
-    >>> filtered == {'a': 1, 'c': 3}
-    True
-    >>> set(filtered.values()) == {1, 3}
-    True
-    >>> set(filtered.items()) == {('a', 1), ('c', 3)}
-    True
-    >>> len(filtered)
-    2
+    >>> sample = dict(a=1, b=2, c=3, d=4, ef=5)
 
-    One can also filter by a regular expression pattern
-
-    >>> sample['d'] = 4
-    >>> sample['ef'] = 5
-
-    Here we filter for only single-character keys
+    Filter for only single-character keys:
 
     >>> filtered = DictFilter(sample, include_pattern='.$')
     >>> filtered == dict(a=1, b=2, c=3, d=4)
@@ -104,8 +91,8 @@ class DictFilter(Projection):
     Pattern is useful for excluding keys with a prefix.
 
     >>> filtered = DictFilter(sample, include_pattern=r'(?![ace])')
-    >>> dict(filtered)
-    {'b': 2, 'd': 4}
+    >>> dict(filtered) == dict(b=2, d=4)
+    True
 
     Also note that DictFilter keeps a reference to the original dict, so
     if you modify the original dict, that could modify the filtered dict.
@@ -117,10 +104,23 @@ class DictFilter(Projection):
 
     def __init__(self, dict, include_keys=[], include_pattern=None):
         self._space = dict
+        if include_keys:
+            warnings.warn(
+                "Passing include_keys to DictFilter is deprecated. "
+                "Wrap the mapping in Projection instead.",
+                DeprecationWarning,
+                stacklevel=2,
+            )
         self._spec_keys = set(include_keys)
         if include_pattern is not None:
             self._include_pattern = re.compile(include_pattern)
         else:
+            warnings.warn(
+                "Not specifying an include pattern is deprecated. "
+                "Use a Projection instead.",
+                DeprecationWarning,
+                stacklevel=2,
+            )
             # for performance, replace the pattern_keys property
             self._pattern_keys = set()
 
