@@ -5,6 +5,7 @@ import itertools
 import copy
 import functools
 import random
+from collections.abc import Mapping, Iterable
 
 from jaraco.classes.properties import NonDataProperty
 import jaraco.text
@@ -47,7 +48,7 @@ class Projection(collections.abc.Mapping):
     {'c': 3}
     """
 
-    def __init__(self, keys, space):
+    def __init__(self, keys: Iterable, space: Mapping):
         self._keys = set(keys)
         self._space = space
 
