@@ -48,7 +48,7 @@ class Projection(collections.abc.Mapping):
     """
 
     def __init__(self, keys, space):
-        self._keys = tuple(keys)
+        self._keys = set(keys)
         self._space = space
 
     def __getitem__(self, key):
@@ -57,7 +57,7 @@ class Projection(collections.abc.Mapping):
         return self._space[key]
 
     def _keys_resolved(self):
-        return set(self._keys).intersection(self._space)
+        return self._keys.intersection(self._space)
 
     def __iter__(self):
         return iter(self._keys_resolved())
