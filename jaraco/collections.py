@@ -71,7 +71,7 @@ class DictFilter(collections.abc.Mapping):
     """
     Takes a dict, and simulates a sub-dict based on the keys.
 
-    >>> sample = {'a': 1, 'b': 2, 'c': 3}
+    >>> sample = dict(a=1, b=2, c=3)
     >>> filtered = DictFilter(sample, ['a', 'c'])
     >>> filtered == {'a': 1, 'c': 3}
     True
@@ -88,7 +88,7 @@ class DictFilter(collections.abc.Mapping):
     Here we filter for only single-character keys
 
     >>> filtered = DictFilter(sample, include_pattern='.$')
-    >>> filtered == {'a': 1, 'b': 2, 'c': 3, 'd': 4}
+    >>> filtered == dict(a=1, b=2, c=3, d=4)
     True
 
     >>> filtered['e']
