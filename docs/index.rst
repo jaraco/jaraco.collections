@@ -15,6 +15,8 @@ Welcome to |project| documentation!
     :show-inheritance:
 
 
+test
+
 Indices and tables
 ==================
 
