@@ -1,3 +1,9 @@
+v4.1.0
+======
+
+``Projection`` now accepts an iterable or callable for its
+first argument.
+
 v4.0.0
 ======
 

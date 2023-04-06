@@ -5,9 +5,24 @@ import itertools
 import copy
 import functools
 import random
-from collections.abc import Mapping, Iterable
+from collections.abc import Container, Iterable, Mapping
+from typing import Callable, Union
 
 import jaraco.text
+
+
+_Matchable = Union[Callable, Container, Iterable]
+
+
+def _dispatch(obj: _Matchable) -> Callable:
+    # can't rely on singledispatch for Union[Container, Iterable]
+    # due to ambiguity
+    # (https://peps.python.org/pep-0443/#abstract-base-classes).
+    if not isinstance(obj, Callable):  # type: ignore
+        if not isinstance(obj, Container):
+            obj = set(obj)  # type: ignore
+        obj = obj.__contains__
+    return obj  # type: ignore
 
 
 class Projection(collections.abc.Mapping):
@@ -17,6 +32,13 @@ class Projection(collections.abc.Mapping):
     >>> sample = {'a': 1, 'b': 2, 'c': 3}
     >>> prj = Projection(['a', 'c', 'd'], sample)
     >>> prj == {'a': 1, 'c': 3}
+    True
+
+    Projection also accepts an iterable or callable.
+
+    >>> iter_prj = Projection(iter('acd'), sample)
+    >>> call_prj = Projection(lambda k: ord(k) in (97, 99, 100), sample)
+    >>> prj == iter_prj == call_prj
     True
 
     Keys should only appear if they were specified and exist in the space.
@@ -47,23 +69,23 @@ class Projection(collections.abc.Mapping):
     {'c': 3}
     """
 
-    def __init__(self, keys: Iterable, space: Mapping):
-        self._keys = set(keys)
+    def __init__(self, keys: _Matchable, space: Mapping):
+        self._match = _dispatch(keys)
         self._space = space
 
     def __getitem__(self, key):
-        if key not in self._keys:
+        if not self._match(key):
             raise KeyError(key)
         return self._space[key]
 
     def _keys_resolved(self):
-        return self._keys.intersection(self._space)
+        return filter(self._match, self._space)
 
     def __iter__(self):
-        return iter(self._keys_resolved())
+        return self._keys_resolved()
 
     def __len__(self):
-        return len(self._keys_resolved())
+        return len(tuple(self._keys_resolved()))
 
 
 class DictFilter(Projection):
@@ -101,12 +123,7 @@ class DictFilter(Projection):
     """
 
     def __init__(self, dict, *, include_pattern):
-        self._space = dict
-        self._include_pattern = re.compile(include_pattern)
-
-    @property
-    def _keys(self):
-        return set(filter(self._include_pattern.match, self._space))
+        super().__init__(re.compile(include_pattern).match, dict)
 
 
 def dict_map(function, dictionary):
