@@ -11,13 +11,15 @@ from typing import Callable, Union
 import jaraco.text
 
 
-_Matchable = Union[Callable, Container, Iterable]
+_Matchable = Union[Callable, Container, Iterable, re.Pattern]
 
 
 def _dispatch(obj: _Matchable) -> Callable:
     # can't rely on singledispatch for Union[Container, Iterable]
     # due to ambiguity
     # (https://peps.python.org/pep-0443/#abstract-base-classes).
+    if isinstance(obj, re.Pattern):
+        return obj.fullmatch
     if not isinstance(obj, Callable):  # type: ignore
         if not isinstance(obj, Container):
             obj = set(obj)  # type: ignore
@@ -34,11 +36,12 @@ class Projection(collections.abc.Mapping):
     >>> prj == {'a': 1, 'c': 3}
     True
 
-    Projection also accepts an iterable or callable.
+    Projection also accepts an iterable or callable or pattern.
 
     >>> iter_prj = Projection(iter('acd'), sample)
     >>> call_prj = Projection(lambda k: ord(k) in (97, 99, 100), sample)
-    >>> prj == iter_prj == call_prj
+    >>> pat_prj = Projection(re.compile(r'[acd]'), sample)
+    >>> prj == iter_prj == call_prj == pat_prj
     True
 
     Keys should only appear if they were specified and exist in the space.
