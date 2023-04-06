@@ -5,6 +5,7 @@ import itertools
 import copy
 import functools
 import random
+import warnings
 from collections.abc import Container, Iterable, Mapping
 from typing import Callable, Union
 
@@ -94,6 +95,8 @@ class Projection(collections.abc.Mapping):
 
 class DictFilter(Projection):
     """
+    *Deprecated*
+
     Takes a dict and simulates a sub-dict based on a pattern.
 
     >>> sample = dict(a=1, b=2, c=3, d=4, ef=5)
@@ -127,6 +130,11 @@ class DictFilter(Projection):
     """
 
     def __init__(self, dict, *, include_pattern):
+        warnings.warn(
+            "DictFilter is deprecated. Pass re.Pattern to Projection instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         super().__init__(re.compile(include_pattern).match, dict)
 
 

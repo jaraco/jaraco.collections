@@ -7,6 +7,8 @@ for matching keys.
 ``Projection`` now retains order of keys from the underlying
 mapping.
 
+``DictFilter`` is now deprecated in favor of ``Projection``.
+
 v4.0.0
 ======
 
