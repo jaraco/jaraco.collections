@@ -45,8 +45,9 @@ class Projection(collections.abc.Mapping):
     True
 
     Keys should only appear if they were specified and exist in the space.
+    Order is retained.
 
-    >>> sorted(list(prj.keys()))
+    >>> list(prj)
     ['a', 'c']
 
     Attempting to access a key not in the projection
@@ -61,8 +62,8 @@ class Projection(collections.abc.Mapping):
 
     >>> target = {'a': 2, 'b': 2}
     >>> target.update(prj)
-    >>> target == {'a': 1, 'b': 2, 'c': 3}
-    True
+    >>> dict(target)
+    {'a': 1, 'b': 2, 'c': 3}
 
     Also note that Projection keeps a reference to the original dict, so
     if you modify the original dict, that could modify the Projection.

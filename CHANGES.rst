@@ -4,6 +4,9 @@ v4.1.0
 ``Projection`` now accepts an iterable or callable or pattern
 for matching keys.
 
+``Projection`` now retains order of keys from the underlying
+mapping.
+
 v4.0.0
 ======
 
