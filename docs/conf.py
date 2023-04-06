@@ -30,17 +30,7 @@ link_files = {
 
 # Be strict about any broken references
 nitpicky = True
-
-nitpick_ignore = [
-    # jaraco/jaraco.collections#11
-    ('py:class', 'v, remove specified key and return the corresponding value.'),
-    ('py:class', 'None.  Update D from dict/iterable E and F.'),
-    ('py:class', 'D[k] if k in D, else d.  d defaults to None.'),
-]
-
-nitpick_ignore += [
-    ('py:class', 're.Pattern'),
-]
+nitpick_ignore = []
 
 # Include Python intersphinx mapping to prevent failures
 # jaraco/skeleton#51
@@ -53,3 +43,14 @@ intersphinx_mapping = {
 autodoc_preserve_defaults = True
 
 extensions += ['jaraco.tidelift']
+
+# jaraco/jaraco.collections#11
+nitpick_ignore += [
+    ('py:class', 'v, remove specified key and return the corresponding value.'),
+    ('py:class', 'None.  Update D from dict/iterable E and F.'),
+    ('py:class', 'D[k] if k in D, else d.  d defaults to None.'),
+]
+
+nitpick_ignore += [
+    ('py:class', 're.Pattern'),
+]
