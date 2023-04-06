@@ -66,8 +66,8 @@ class Projection(collections.abc.Mapping):
     >>> target
     {'a': 1, 'b': 2, 'c': 3}
 
-    Also note that Projection keeps a reference to the original dict, so
-    if you modify the original dict, that could modify the Projection.
+    Projection keeps a reference to the original dict, so
+    modifying the original dict may modify the Projection.
 
     >>> del sample['a']
     >>> dict(prj)
@@ -121,8 +121,8 @@ class DictFilter(Projection):
     >>> filtered == dict(b=2, d=4)
     True
 
-    Also note that DictFilter keeps a reference to the original dict, so
-    if you modify the original dict, that could modify the filtered dict.
+    DictFilter keeps a reference to the original dict, so
+    modifying the original dict may modify the filtered dict.
 
     >>> del sample['d']
     >>> dict(filtered)
