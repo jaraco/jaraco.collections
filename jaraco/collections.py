@@ -162,7 +162,7 @@ class RangeMap(dict):
     One may supply keyword parameters to be passed to the sort function used
     to sort keys (i.e. key, reverse) as sort_params.
 
-    Let's create a map that maps 1-3 -> 'a', 4-6 -> 'b'
+    Create a map that maps 1-3 -> 'a', 4-6 -> 'b'
 
     >>> r = RangeMap({3: 'a', 6: 'b'})  # boy, that was easy
     >>> r[1], r[2], r[3], r[4], r[5], r[6]
@@ -174,7 +174,7 @@ class RangeMap(dict):
     >>> r[4.5]
     'b'
 
-    But you'll notice that the way rangemap is defined, it must be open-ended
+    Notice that the way rangemap is defined, it must be open-ended
     on one side.
 
     >>> r[0]
@@ -292,7 +292,7 @@ def __identity(x):
 
 def sorted_items(d, key=__identity, reverse=False):
     """
-    Return the items of the dictionary sorted by the keys
+    Return the items of the dictionary sorted by the keys.
 
     >>> sample = dict(foo=20, bar=42, baz=10)
     >>> tuple(sorted_items(sample))
