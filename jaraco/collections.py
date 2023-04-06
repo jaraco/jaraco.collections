@@ -114,7 +114,7 @@ class DictFilter(Projection):
     Pattern is useful for excluding keys with a prefix.
 
     >>> filtered = DictFilter(sample, include_pattern=r'(?![ace])')
-    >>> dict(filtered) == dict(b=2, d=4)
+    >>> filtered == dict(b=2, d=4)
     True
 
     Also note that DictFilter keeps a reference to the original dict, so
