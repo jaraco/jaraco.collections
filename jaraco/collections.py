@@ -34,8 +34,8 @@ class Projection(collections.abc.Mapping):
 
     >>> sample = {'a': 1, 'b': 2, 'c': 3}
     >>> prj = Projection(['a', 'c', 'd'], sample)
-    >>> prj == {'a': 1, 'c': 3}
-    True
+    >>> dict(prj)
+    {'a': 1, 'c': 3}
 
     Projection also accepts an iterable or callable or pattern.
 
