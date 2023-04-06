@@ -38,6 +38,10 @@ nitpick_ignore = [
     ('py:class', 'D[k] if k in D, else d.  d defaults to None.'),
 ]
 
+nitpick_ignore += [
+    ('py:class', 're.Pattern'),
+]
+
 # Include Python intersphinx mapping to prevent failures
 # jaraco/skeleton#51
 extensions += ['sphinx.ext.intersphinx']
