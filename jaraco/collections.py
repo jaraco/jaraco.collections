@@ -63,7 +63,7 @@ class Projection(collections.abc.Mapping):
 
     >>> target = {'a': 2, 'b': 2}
     >>> target.update(prj)
-    >>> dict(target)
+    >>> target
     {'a': 1, 'b': 2, 'c': 3}
 
     Also note that Projection keeps a reference to the original dict, so
