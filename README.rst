@@ -28,7 +28,6 @@ Highlights include:
 
 - RangeMap: A mapping that accepts a range of values for keys.
 - Projection: A subset over an existing mapping.
-- DictFilter: A different implementation of a projection.
 - KeyTransformingDict: Generalized mapping with keys transformed by a function.
 - FoldedCaseKeyedDict: A dict whose string keys are case-insensitive.
 - BijectiveMap: A map where keys map to values and values back to their keys.
