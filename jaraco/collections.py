@@ -93,6 +93,22 @@ class Projection(collections.abc.Mapping):
         return len(tuple(self._keys_resolved()))
 
 
+class Mask(Projection):
+    """
+    The inverse of a projection, masking out keys.
+
+    >>> sample = {'a': 1, 'b': 2, 'c': 3}
+    >>> msk = Mask(['a', 'c', 'd'], sample)
+    >>> dict(msk)
+    {'b': 2}
+    """
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # self._match = compose(operator.not_, self._match)
+        self._match = lambda key, orig=self._match: not orig(key)
+
+
 class DictFilter(Projection):
     """
     *Deprecated*

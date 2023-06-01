@@ -1,3 +1,8 @@
+v4.2.0
+======
+
+Added ``Mask``, the inverse of a ``Projection``.
+
 v4.1.0
 ======
 
