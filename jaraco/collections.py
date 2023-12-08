@@ -94,7 +94,7 @@ class Projection(collections.abc.Mapping):
 
 class Mask(Projection):
     """
-    The inverse of a projection, masking out keys.
+    The inverse of a :class:`Projection`, masking out keys.
 
     >>> sample = {'a': 1, 'b': 2, 'c': 3}
     >>> msk = Mask(['a', 'c', 'd'], sample)
