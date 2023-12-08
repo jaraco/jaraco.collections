@@ -5,7 +5,6 @@ import itertools
 import copy
 import functools
 import random
-import warnings
 from collections.abc import Container, Iterable, Mapping
 from typing import Callable, Union
 
@@ -107,51 +106,6 @@ class Mask(Projection):
         super().__init__(*args, **kwargs)
         # self._match = compose(operator.not_, self._match)
         self._match = lambda key, orig=self._match: not orig(key)
-
-
-class DictFilter(Projection):
-    """
-    *Deprecated*
-
-    Takes a dict and simulates a sub-dict based on a pattern.
-
-    >>> sample = dict(a=1, b=2, c=3, d=4, ef=5)
-
-    Filter for only single-character keys:
-
-    >>> filtered = DictFilter(sample, include_pattern='.$')
-    >>> filtered == dict(a=1, b=2, c=3, d=4)
-    True
-
-    >>> filtered['e']
-    Traceback (most recent call last):
-    ...
-    KeyError: 'e'
-
-    >>> 'e' in filtered
-    False
-
-    Pattern is useful for excluding keys with a prefix.
-
-    >>> filtered = DictFilter(sample, include_pattern=r'(?![ace])')
-    >>> filtered == dict(b=2, d=4)
-    True
-
-    DictFilter keeps a reference to the original dict, so
-    modifying the original dict may modify the filtered dict.
-
-    >>> del sample['d']
-    >>> dict(filtered)
-    {'b': 2}
-    """
-
-    def __init__(self, dict, *, include_pattern):
-        warnings.warn(
-            "DictFilter is deprecated. Pass re.Pattern to Projection instead.",
-            DeprecationWarning,
-            stacklevel=2,
-        )
-        super().__init__(re.compile(include_pattern).match, dict)
 
 
 def dict_map(function, dictionary):
