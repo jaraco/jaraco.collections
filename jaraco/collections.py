@@ -156,13 +156,10 @@ class DictFilter(Projection):
 
 def dict_map(function, dictionary):
     """
-    dict_map is much like the built-in function map.  It takes a dictionary
-    and applys a function to the values of that dictionary, returning a
-    new dictionary with the mapped values in the original keys.
+    Return a new dict with function applied to values of dictionary.
 
-    >>> d = dict_map(lambda x:x+1, dict(a=1, b=2))
-    >>> d == dict(a=2,b=3)
-    True
+    >>> dict_map(lambda x: x+1, dict(a=1, b=2))
+    {'a': 2, 'b': 3}
     """
     return dict((key, function(value)) for key, value in dictionary.items())
 
