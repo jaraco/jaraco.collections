@@ -1,14 +1,15 @@
 .. image:: https://img.shields.io/pypi/v/jaraco.collections.svg
-   :target: `PyPI link`_
+   :target: https://pypi.org/project/jaraco.collections
 
 .. image:: https://img.shields.io/pypi/pyversions/jaraco.collections.svg
-   :target: `PyPI link`_
 
-.. _PyPI link: https://pypi.org/project/jaraco.collections
-
-.. image:: https://github.com/jaraco/jaraco.collections/workflows/tests/badge.svg
+.. image:: https://github.com/jaraco/jaraco.collections/actions/workflows/main.yml/badge.svg
    :target: https://github.com/jaraco/jaraco.collections/actions?query=workflow%3A%22tests%22
    :alt: tests
+
+.. image:: https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/charliermarsh/ruff/main/assets/badge/v2.json
+    :target: https://github.com/astral-sh/ruff
+    :alt: Ruff
 
 .. image:: https://img.shields.io/badge/code%20style-black-000000.svg
    :target: https://github.com/psf/black
@@ -17,7 +18,7 @@
 .. image:: https://readthedocs.org/projects/jaracocollections/badge/?version=latest
    :target: https://jaracocollections.readthedocs.io/en/latest/?badge=latest
 
-.. image:: https://img.shields.io/badge/skeleton-2022-informational
+.. image:: https://img.shields.io/badge/skeleton-2023-informational
    :target: https://blog.jaraco.com/skeleton
 
 .. image:: https://tidelift.com/badges/package/pypi/jaraco.collections
@@ -31,7 +32,6 @@ Highlights include:
 
 - RangeMap: A mapping that accepts a range of values for keys.
 - Projection: A subset over an existing mapping.
-- DictFilter: A different implementation of a projection.
 - KeyTransformingDict: Generalized mapping with keys transformed by a function.
 - FoldedCaseKeyedDict: A dict whose string keys are case-insensitive.
 - BijectiveMap: A map where keys map to values and values back to their keys.
@@ -53,10 +53,3 @@ Available as part of the Tidelift Subscription.
 This project and the maintainers of thousands of other packages are working with Tidelift to deliver one enterprise subscription that covers all of the open source you use.
 
 `Learn more <https://tidelift.com/subscription/pkg/pypi-jaraco.collections?utm_source=pypi-jaraco.collections&utm_medium=referral&utm_campaign=github>`_.
-
-Security Contact
-================
-
-To report a security vulnerability, please use the
-`Tidelift security contact <https://tidelift.com/security>`_.
-Tidelift will coordinate the fix and disclosure.

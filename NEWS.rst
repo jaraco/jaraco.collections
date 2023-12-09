@@ -1,3 +1,79 @@
+v4.3.0
+======
+
+Features
+--------
+
+- Require Python 3.8 or later.
+
+
+v4.2.0
+======
+
+Added ``Mask``, the inverse of a ``Projection``.
+
+v4.1.0
+======
+
+``Projection`` now accepts an iterable or callable or pattern
+for matching keys.
+
+``Projection`` now retains order of keys from the underlying
+mapping.
+
+``DictFilter`` is now deprecated in favor of ``Projection``.
+
+v4.0.0
+======
+
+``DictFilter`` no longer accepts ``include_keys`` and requires
+``include_pattern`` as a keyword argument.
+
+v3.11.0
+=======
+
+In ``DictFilter``, deprecated ``include_keys`` parameter and usage
+without ``include_pattern``. Future versions will honor
+``include_pattern`` as a required keyword argument. All other
+uses are deprecated. For uses that currently rely on ``include_keys``,
+use ``Projection`` instead/in addition. For example, instead of::
+
+    filtered = DictFilter(orig, include_keys=['a'], include_pattern='b+')
+
+Use::
+
+    filtered = DictFilter(Projection(['a'], orig), include_pattern='b+')
+
+v3.10.0
+=======
+
+In ``Projection``, harmonize the implementation and optimize using
+``set`` instead of ``tuple``.
+
+v3.9.0
+======
+
+``DictFilter.__len__`` no longer relies on the iterable. Improves
+efficiency and fixes ``RecursionError`` on PyPy (#12).
+
+v3.8.0
+======
+
+Made ``DictStack`` mutable.
+
+v3.7.0
+======
+
+Added ``RangeMap.left``.
+
+v3.6.0
+======
+
+Revised ``DictFilter``:
+
+ - Fixed issue where ``DictFilter.__contains__`` would raise a ``KeyError``.
+ - Relies heavily now on ``collections.abc.Mapping`` base class.
+
 v3.5.2
 ======
 
