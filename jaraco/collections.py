@@ -1058,7 +1058,8 @@ class WeightedLookup(RangeMap):
 
 
 def remove_matching(
-    orig: collections.abc.MutableMapping[Any:Any], predicate: Union[str, callable]
+    orig: collections.abc.MutableMapping[Any, Any],
+    predicate: _Matchable,
 ):
     """
     Remove items from orig that match the predicate.
