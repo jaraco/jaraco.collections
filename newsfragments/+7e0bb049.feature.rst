@@ -1,0 +1,1 @@
+Added remove_matching and remove_keys functions.
