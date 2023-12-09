@@ -5,7 +5,7 @@ import itertools
 import copy
 import functools
 import random
-from collections.abc import Container, Iterable, Mapping
+from collections.abc import Container, Iterable, Mapping, MutableMapping
 from typing import Any, Callable, Union
 
 import jaraco.text
@@ -1058,7 +1058,7 @@ class WeightedLookup(RangeMap):
 
 
 def remove_matching(
-    orig: collections.abc.MutableMapping[Any, Any],
+    orig: MutableMapping[str, Any],
     predicate: _Matchable,
 ):
     """
@@ -1075,7 +1075,7 @@ def remove_matching(
     remove_keys(orig, filter(_dispatch(predicate), orig))
 
 
-def remove_keys(target: collections.abc.MutableMapping, keys):
+def remove_keys(target: MutableMapping[str, Any], keys):
     """
     >>> d = dict(zip('abc', range(1, 4)))
     >>> remove_keys(d, ('a', 'c'))
