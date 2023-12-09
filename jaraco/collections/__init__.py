@@ -5,11 +5,13 @@ import itertools
 import copy
 import functools
 import random
-from collections.abc import Container, Iterable, Mapping, MutableMapping
+from collections.abc import Container, Iterable, Mapping
 from typing import Any, Callable, Union
 
 import jaraco.text
 from more_itertools import consume
+
+from .compat.py38 import MutableMapping
 
 
 _Matchable = Union[Callable, Container, Iterable, re.Pattern]
