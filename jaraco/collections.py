@@ -1057,21 +1057,6 @@ class WeightedLookup(RangeMap):
         return self[selector]
 
 
-@functools.singledispatch
-def _make_predicate(param: Union[str, callable]) -> callable:
-    return param
-
-
-@_make_predicate.register
-def _(param: str):
-    return _make_predicate(re.compile(param))
-
-
-@_make_predicate.register
-def _(param: re.Pattern):
-    return param.match
-
-
 def remove_matching(
     orig: collections.abc.MutableMapping[Any:Any], predicate: Union[str, callable]
 ):
@@ -1086,7 +1071,7 @@ def remove_matching(
     >>> d
     {'e': 5, 'f': 6, 'g': 7}
     """
-    remove_keys(orig, filter(_make_predicate(predicate), orig))
+    remove_keys(orig, filter(_dispatch(predicate), orig))
 
 
 def remove_keys(target: collections.abc.MutableMapping, keys):
