@@ -1,3 +1,18 @@
+v5.0.0
+======
+
+Features
+--------
+
+- Moved collections into a package and declared as typed.
+
+
+Deprecations and Removals
+-------------------------
+
+- Removed DictFilter.
+
+
 v4.3.0
 ======
 
