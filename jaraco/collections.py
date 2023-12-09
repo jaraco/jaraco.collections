@@ -1081,7 +1081,7 @@ def remove_matching(
     >>> d = dict(zip('abcdefg', range(1, 8)))
     >>> remove_matching(d, lambda val: val == 'a')
     >>> d
-    {'b': 2, 'c': 3, 'd': 4, 'e': 5, 'f': 6}
+    {'b': 2, 'c': 3, 'd': 4, 'e': 5, 'f': 6, 'g': 7}
     >>> remove_matching(d, r'[bcd]')
     >>> d
     {'e': 5, 'f': 6, 'g': 7}
