@@ -6,7 +6,7 @@ import copy
 import functools
 import random
 from collections.abc import Container, Iterable, Mapping
-from typing import Callable, Union
+from typing import Callable, Union, Any
 
 import jaraco.text
 
@@ -199,7 +199,12 @@ class RangeMap(dict):
 
     """
 
-    def __init__(self, source, sort_params={}, key_match_comparator=operator.le):
+    def __init__(
+        self,
+        source,
+        sort_params: Mapping[str, Any] = {},
+        key_match_comparator=operator.le,
+    ):
         dict.__init__(self, source)
         self.sort_params = sort_params
         self.match = key_match_comparator
