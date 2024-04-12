@@ -338,8 +338,8 @@ class KeyTransformingDict(dict):
         """
         try:
             return next(e_key for e_key in self.keys() if e_key == key)
-        except StopIteration:
-            raise KeyError(key)
+        except StopIteration as err:
+            raise KeyError(key) from err
 
 
 class FoldedCaseKeyedDict(KeyTransformingDict):
