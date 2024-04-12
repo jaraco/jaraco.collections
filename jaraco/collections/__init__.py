@@ -1,15 +1,14 @@
-import re
-import operator
 import collections.abc
-import itertools
 import copy
 import functools
+import itertools
+import operator
 import random
+import re
 from collections.abc import Container, Iterable, Mapping
-from typing import Callable, Union, Any
+from typing import Any, Callable, Union
 
 import jaraco.text
-
 
 _Matchable = Union[Callable, Container, Iterable, re.Pattern]
 
