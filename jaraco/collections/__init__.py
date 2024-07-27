@@ -18,9 +18,9 @@ if TYPE_CHECKING:
     from _typeshed import SupportsKeysAndGetItem
     from typing_extensions import Self
 
-_T = TypeVar("_T")
-_RangeMapKT = TypeVar("_RangeMapKT", bound=_SupportsComparison)
-_VT = TypeVar("_VT")
+_T = TypeVar('_T')
+_RangeMapKT = TypeVar('_RangeMapKT', bound=_SupportsComparison)
+_VT = TypeVar('_VT')
 
 _Matchable = Union[Callable, Container, Iterable, re.Pattern]
 
@@ -274,7 +274,7 @@ class RangeMap(Dict[_RangeMapKT, _VT]):
         return (sorted_keys[RangeMap.first_item], sorted_keys[RangeMap.last_item])
 
     # some special values for the RangeMap
-    undefined_value = type("RangeValueUndefined", (), {})()
+    undefined_value = type('RangeValueUndefined', (), {})()
 
     class Item(int):
         """RangeMap Item"""
@@ -531,7 +531,7 @@ class ItemsAsAttributes:
             # raise the original exception, but use the original class
             #  name, not 'super'.
             (message,) = e.args
-            message = message.replace("super", self.__class__.__name__, 1)
+            message = message.replace('super', self.__class__.__name__, 1)
             e.args = (message,)
             raise
 
@@ -554,7 +554,7 @@ def invert_map(map):
     """
     res = dict((v, k) for k, v in map.items())
     if not len(res) == len(map):
-        raise ValueError("Key conflict in inverted mapping")
+        raise ValueError('Key conflict in inverted mapping')
     return res
 
 
@@ -796,7 +796,7 @@ class FrozenDict(collections.abc.Mapping, collections.abc.Hashable):
     True
     """
 
-    __slots__ = ["__data"]
+    __slots__ = ['__data']
 
     def __new__(cls, *args, **kwargs):
         self = super().__new__(cls)
@@ -1024,7 +1024,7 @@ class FreezableDefaultDict(collections.defaultdict):  # type: ignore
     """
 
     def __missing__(self, key):
-        return getattr(self, "_frozen", super().__missing__)(key)
+        return getattr(self, '_frozen', super().__missing__)(key)
 
     def freeze(self):
         self._frozen = lambda key: self.default_factory()
