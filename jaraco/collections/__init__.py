@@ -19,12 +19,13 @@ if TYPE_CHECKING:
     from typing_extensions import Self
 
     _RangeMapKT = TypeVar('_RangeMapKT', bound=_SupportsComparison)
+else:
+    # _SupportsComparison doesn't exist at runtime,
+    # but _RangeMapKT is used in RangeMap's superclass' type parameters
+    _RangeMapKT = TypeVar('_RangeMapKT')
 
 _T = TypeVar('_T')
 _VT = TypeVar('_VT')
-# _SupportsComparison doesn't exist at runtime,
-# but _RangeMapKT is used in RangeMap's superclass' type parameters
-_RangeMapKT = TypeVar('_RangeMapKT')
 
 _Matchable = Union[Callable, Container, Iterable, re.Pattern]
 
