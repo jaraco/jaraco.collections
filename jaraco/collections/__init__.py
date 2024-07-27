@@ -8,9 +8,16 @@ import operator
 import random
 import re
 from collections.abc import Container, Iterable, Mapping
-from typing import Any, Callable, Union
+from typing import TYPE_CHECKING, Any, Callable, Dict, TypeVar, Union, overload
 
 import jaraco.text
+
+if TYPE_CHECKING:
+    from _typeshed import SupportsKeysAndGetItem
+    from typing_extensions import Self
+
+_T = TypeVar('_T')
+_VT = TypeVar('_VT')
 
 _Matchable = Union[Callable, Container, Iterable, re.Pattern]
 
@@ -119,7 +126,7 @@ def dict_map(function, dictionary):
     return dict((key, function(value)) for key, value in dictionary.items())
 
 
-class RangeMap(dict):
+class RangeMap(Dict[int, _VT]):
     """
     A dictionary-like object that uses the keys as bounds for a range.
     Inclusion of the value for that range is determined by the
@@ -186,7 +193,7 @@ class RangeMap(dict):
     which requires use of sort params and a key_match_comparator.
 
     >>> r = RangeMap({1: 'a', 4: 'b'},
-    ...     sort_params=dict(reverse=True),
+    ...     sort_params={'reverse': True},
     ...     key_match_comparator=operator.ge)
     >>> r[1], r[2], r[3], r[4], r[5], r[6]
     ('a', 'a', 'a', 'b', 'b', 'b')
@@ -202,21 +209,23 @@ class RangeMap(dict):
 
     def __init__(
         self,
-        source,
+        source: SupportsKeysAndGetItem[int, _VT] | Iterable[tuple[int, _VT]],
         sort_params: Mapping[str, Any] = {},
-        key_match_comparator=operator.le,
+        key_match_comparator: Callable[[int, int], bool] = operator.le,
     ):
         dict.__init__(self, source)
         self.sort_params = sort_params
         self.match = key_match_comparator
 
     @classmethod
-    def left(cls, source):
+    def left(
+        cls, source: SupportsKeysAndGetItem[int, _VT] | Iterable[tuple[int, _VT]]
+    ) -> Self:
         return cls(
-            source, sort_params=dict(reverse=True), key_match_comparator=operator.ge
+            source, sort_params={'reverse': True}, key_match_comparator=operator.ge
         )
 
-    def __getitem__(self, item):
+    def __getitem__(self, item: int) -> _VT:
         sorted_keys = sorted(self.keys(), **self.sort_params)
         if isinstance(item, RangeMap.Item):
             result = self.__getitem__(sorted_keys[item])
@@ -227,7 +236,11 @@ class RangeMap(dict):
                 raise KeyError(key)
         return result
 
-    def get(self, key, default=None):
+    @overload  # type: ignore[override] # Signature simplified over dict and Mapping
+    def get(self, key: int, default: _T) -> _VT | _T: ...
+    @overload
+    def get(self, key: int, default: None = None) -> _VT | None: ...
+    def get(self, key: int, default: _T | None = None) -> _VT | _T | None:
         """
         Return the value for key if key is in the dictionary, else default.
         If default is not given, it defaults to None, so that this method
@@ -238,14 +251,15 @@ class RangeMap(dict):
         except KeyError:
             return default
 
-    def _find_first_match_(self, keys, item):
+    def _find_first_match_(self, keys: Iterable[int], item: int) -> int:
         is_match = functools.partial(self.match, item)
-        matches = list(filter(is_match, keys))
-        if matches:
-            return matches[0]
-        raise KeyError(item)
+        matches = filter(is_match, keys)
+        try:
+            return next(matches)
+        except StopIteration:
+            raise KeyError(item) from None
 
-    def bounds(self):
+    def bounds(self) -> tuple[int, int]:
         sorted_keys = sorted(self.keys(), **self.sort_params)
         return (sorted_keys[RangeMap.first_item], sorted_keys[RangeMap.last_item])
 
@@ -253,7 +267,7 @@ class RangeMap(dict):
     undefined_value = type('RangeValueUndefined', (), {})()
 
     class Item(int):
-        "RangeMap Item"
+        'RangeMap Item'
 
     first_item = Item(0)
     last_item = Item(-1)

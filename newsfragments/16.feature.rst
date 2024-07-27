@@ -1,0 +1,1 @@
+Fully typed ``RangeMap`` and avoid complete iterations to find matches -- by :user:`Avasam`
