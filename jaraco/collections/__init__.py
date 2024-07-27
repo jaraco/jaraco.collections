@@ -13,10 +13,13 @@ from typing import TYPE_CHECKING, Any, Callable, Dict, TypeVar, Union, overload
 import jaraco.text
 
 if TYPE_CHECKING:
+    from _operator import _SupportsComparison
+
     from _typeshed import SupportsKeysAndGetItem
     from typing_extensions import Self
 
 _T = TypeVar("_T")
+_RangeMapKT = TypeVar("_RangeMapKT", bound=_SupportsComparison)
 _VT = TypeVar("_VT")
 
 _Matchable = Union[Callable, Container, Iterable, re.Pattern]
@@ -126,7 +129,7 @@ def dict_map(function, dictionary):
     return dict((key, function(value)) for key, value in dictionary.items())
 
 
-class RangeMap(Dict[int, _VT]):
+class RangeMap(Dict[_RangeMapKT, _VT]):
     """
     A dictionary-like object that uses the keys as bounds for a range.
     Inclusion of the value for that range is determined by the
@@ -209,9 +212,11 @@ class RangeMap(Dict[int, _VT]):
 
     def __init__(
         self,
-        source: SupportsKeysAndGetItem[int, _VT] | Iterable[tuple[int, _VT]],
+        source: (
+            SupportsKeysAndGetItem[_RangeMapKT, _VT] | Iterable[tuple[_RangeMapKT, _VT]]
+        ),
         sort_params: Mapping[str, Any] = {},
-        key_match_comparator: Callable[[int, int], bool] = operator.le,
+        key_match_comparator: Callable[[_RangeMapKT, _RangeMapKT], bool] = operator.le,
     ):
         dict.__init__(self, source)
         self.sort_params = sort_params
@@ -219,13 +224,16 @@ class RangeMap(Dict[int, _VT]):
 
     @classmethod
     def left(
-        cls, source: SupportsKeysAndGetItem[int, _VT] | Iterable[tuple[int, _VT]]
+        cls,
+        source: (
+            SupportsKeysAndGetItem[_RangeMapKT, _VT] | Iterable[tuple[_RangeMapKT, _VT]]
+        ),
     ) -> Self:
         return cls(
             source, sort_params=dict(reverse=True), key_match_comparator=operator.ge
         )
 
-    def __getitem__(self, item: int) -> _VT:
+    def __getitem__(self, item: _RangeMapKT) -> _VT:
         sorted_keys = sorted(self.keys(), **self.sort_params)
         if isinstance(item, RangeMap.Item):
             result = self.__getitem__(sorted_keys[item])
@@ -237,10 +245,10 @@ class RangeMap(Dict[int, _VT]):
         return result
 
     @overload  # type: ignore[override] # Signature simplified over dict and Mapping
-    def get(self, key: int, default: _T) -> _VT | _T: ...
+    def get(self, key: _RangeMapKT, default: _T) -> _VT | _T: ...
     @overload
-    def get(self, key: int, default: None = None) -> _VT | None: ...
-    def get(self, key: int, default: _T | None = None) -> _VT | _T | None:
+    def get(self, key: _RangeMapKT, default: None = None) -> _VT | None: ...
+    def get(self, key: _RangeMapKT, default: _T | None = None) -> _VT | _T | None:
         """
         Return the value for key if key is in the dictionary, else default.
         If default is not given, it defaults to None, so that this method
@@ -251,7 +259,9 @@ class RangeMap(Dict[int, _VT]):
         except KeyError:
             return default
 
-    def _find_first_match_(self, keys: Iterable[int], item: int) -> int:
+    def _find_first_match_(
+        self, keys: Iterable[_RangeMapKT], item: _RangeMapKT
+    ) -> _RangeMapKT:
         is_match = functools.partial(self.match, item)
         matches = filter(is_match, keys)
         try:
@@ -259,7 +269,7 @@ class RangeMap(Dict[int, _VT]):
         except StopIteration:
             raise KeyError(item) from None
 
-    def bounds(self) -> tuple[int, int]:
+    def bounds(self) -> tuple[_RangeMapKT, _RangeMapKT]:
         sorted_keys = sorted(self.keys(), **self.sort_params)
         return (sorted_keys[RangeMap.first_item], sorted_keys[RangeMap.last_item])
 
