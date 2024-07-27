@@ -18,9 +18,13 @@ if TYPE_CHECKING:
     from _typeshed import SupportsKeysAndGetItem
     from typing_extensions import Self
 
+    _RangeMapKT = TypeVar('_RangeMapKT', bound=_SupportsComparison)
+
 _T = TypeVar('_T')
-_RangeMapKT = TypeVar('_RangeMapKT', bound=_SupportsComparison)
 _VT = TypeVar('_VT')
+# _SupportsComparison doesn't exist at runtime,
+# but _RangeMapKT is used in RangeMap's superclass' type parameters
+_RangeMapKT = TypeVar('_RangeMapKT')
 
 _Matchable = Union[Callable, Container, Iterable, re.Pattern]
 
