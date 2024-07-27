@@ -16,8 +16,8 @@ if TYPE_CHECKING:
     from _typeshed import SupportsKeysAndGetItem
     from typing_extensions import Self
 
-_T = TypeVar('_T')
-_VT = TypeVar('_VT')
+_T = TypeVar("_T")
+_VT = TypeVar("_VT")
 
 _Matchable = Union[Callable, Container, Iterable, re.Pattern]
 
@@ -193,7 +193,7 @@ class RangeMap(Dict[int, _VT]):
     which requires use of sort params and a key_match_comparator.
 
     >>> r = RangeMap({1: 'a', 4: 'b'},
-    ...     sort_params={'reverse': True},
+    ...     sort_params=dict(reverse=True),
     ...     key_match_comparator=operator.ge)
     >>> r[1], r[2], r[3], r[4], r[5], r[6]
     ('a', 'a', 'a', 'b', 'b', 'b')
@@ -222,7 +222,7 @@ class RangeMap(Dict[int, _VT]):
         cls, source: SupportsKeysAndGetItem[int, _VT] | Iterable[tuple[int, _VT]]
     ) -> Self:
         return cls(
-            source, sort_params={'reverse': True}, key_match_comparator=operator.ge
+            source, sort_params=dict(reverse=True), key_match_comparator=operator.ge
         )
 
     def __getitem__(self, item: int) -> _VT:
@@ -264,7 +264,7 @@ class RangeMap(Dict[int, _VT]):
         return (sorted_keys[RangeMap.first_item], sorted_keys[RangeMap.last_item])
 
     # some special values for the RangeMap
-    undefined_value = type('RangeValueUndefined', (), {})()
+    undefined_value = type("RangeValueUndefined", (), {})()
 
     class Item(int):
         """RangeMap Item"""
@@ -521,7 +521,7 @@ class ItemsAsAttributes:
             # raise the original exception, but use the original class
             #  name, not 'super'.
             (message,) = e.args
-            message = message.replace('super', self.__class__.__name__, 1)
+            message = message.replace("super", self.__class__.__name__, 1)
             e.args = (message,)
             raise
 
@@ -544,7 +544,7 @@ def invert_map(map):
     """
     res = dict((v, k) for k, v in map.items())
     if not len(res) == len(map):
-        raise ValueError('Key conflict in inverted mapping')
+        raise ValueError("Key conflict in inverted mapping")
     return res
 
 
@@ -786,7 +786,7 @@ class FrozenDict(collections.abc.Mapping, collections.abc.Hashable):
     True
     """
 
-    __slots__ = ['__data']
+    __slots__ = ["__data"]
 
     def __new__(cls, *args, **kwargs):
         self = super().__new__(cls)
@@ -1014,7 +1014,7 @@ class FreezableDefaultDict(collections.defaultdict):  # type: ignore
     """
 
     def __missing__(self, key):
-        return getattr(self, '_frozen', super().__missing__)(key)
+        return getattr(self, "_frozen", super().__missing__)(key)
 
     def freeze(self):
         self._frozen = lambda key: self.default_factory()
