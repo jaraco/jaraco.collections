@@ -21,11 +21,12 @@ def _dispatch(obj: _Matchable) -> Callable:
     # (https://peps.python.org/pep-0443/#abstract-base-classes).
     if isinstance(obj, re.Pattern):
         return obj.fullmatch
-    if not isinstance(obj, Callable):  # type: ignore
+    # mypy issue: https://github.com/python/mypy/issues/11071
+    if not isinstance(obj, Callable):  # type: ignore[arg-type]
         if not isinstance(obj, Container):
-            obj = set(obj)  # type: ignore
+            obj = set(obj)  # type: ignore[arg-type]
         obj = obj.__contains__
-    return obj  # type: ignore
+    return obj  # type: ignore[return-value]
 
 
 class Projection(collections.abc.Mapping):
@@ -880,7 +881,7 @@ class Everything:
         return True
 
 
-class InstrumentedDict(collections.UserDict):  # type: ignore  # buggy mypy
+class InstrumentedDict(collections.UserDict):
     """
     Instrument an existing dictionary with additional
     functionality, but always reference and mutate
@@ -983,8 +984,7 @@ def pop_all(items):
     return result
 
 
-# mypy disabled for pytest-dev/pytest#8332
-class FreezableDefaultDict(collections.defaultdict):  # type: ignore
+class FreezableDefaultDict(collections.defaultdict):
     """
     Often it is desirable to prevent the mutation of
     a default dict after its initial construction, such
