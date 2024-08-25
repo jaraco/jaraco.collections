@@ -54,3 +54,16 @@ nitpick_ignore += [
 nitpick_ignore += [
     ('py:class', 're.Pattern'),
 ]
+
+# jaraco/jaraco.collections#16
+nitpick_ignore += [
+    ('py:class', 'SupportsKeysAndGetItem'),
+    ('py:class', '_RangeMapKT'),
+    ('py:class', '_VT'),
+    ('py:class', '_T'),
+    ('py:class', 'jaraco.collections._RangeMapKT'),
+    ('py:class', 'jaraco.collections._VT'),
+    ('py:class', 'jaraco.collections._T'),
+    ('py:obj', 'jaraco.collections._RangeMapKT'),
+    ('py:obj', 'jaraco.collections._VT'),
+]
