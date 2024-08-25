@@ -1,3 +1,12 @@
+v5.1.0
+======
+
+Features
+--------
+
+- Fully typed ``RangeMap`` and avoid complete iterations to find matches -- by :user:`Avasam` (#16)
+
+
 v5.0.1
 ======
 
