@@ -8,7 +8,7 @@ import operator
 import random
 import re
 from collections.abc import Container, Iterable, Mapping
-from typing import TYPE_CHECKING, Any, Callable, Dict, TypeVar, Union, overload
+from typing import TYPE_CHECKING, Any, Callable, TypeVar, Union, overload
 
 import jaraco.text
 
@@ -135,7 +135,7 @@ def dict_map(function, dictionary):
     return dict((key, function(value)) for key, value in dictionary.items())
 
 
-class RangeMap(Dict[_RangeMapKT, _VT]):
+class RangeMap(dict[_RangeMapKT, _VT]):
     """
     A dictionary-like object that uses the keys as bounds for a range.
     Inclusion of the value for that range is determined by the
