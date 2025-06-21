@@ -1,3 +1,12 @@
+v5.2.1
+======
+
+Bugfixes
+--------
+
+- Fixed issue when the defaults included the key 'target'.
+
+
 v5.2.0
 ======
 
