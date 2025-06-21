@@ -60,7 +60,7 @@ extensions += ['jaraco.tidelift']
 # jaraco/jaraco.collections#11
 nitpick_ignore += [
     ('py:class', 'v, remove specified key and return the corresponding value.'),
-    ('py:class', 'None.  Update D from dict/iterable E and F.'),
+    ('py:class', 'None.  Update D from mapping/iterable E and F.'),
     ('py:class', 'D[k] if k in D, else d.  d defaults to None.'),
 ]
 
