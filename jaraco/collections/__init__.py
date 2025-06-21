@@ -1091,7 +1091,7 @@ class WeightedLookup(RangeMap):
         return self[selector]
 
 
-def set_defaults(target: dict[str, object], **defaults) -> None:
+def set_defaults(__anon_self: dict[str, object], /, **defaults) -> None:
     """
     Sets values on target in source not already in target.
 
@@ -1101,5 +1101,10 @@ def set_defaults(target: dict[str, object], **defaults) -> None:
     >>> set_defaults(target, b=2, c=4)
     >>> target
     {'a': 1, 'c': 3, 'b': 2}
+
+    The first parameter is bound to a name that's unlikely to
+    collide with the keys in defaults.
+
+    >>> set_defaults(target, target=999)
     """
-    target.update(Mask(target.__contains__, defaults))
+    __anon_self.update(Mask(__anon_self.__contains__, defaults))
