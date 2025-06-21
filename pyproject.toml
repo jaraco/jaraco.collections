@@ -24,7 +24,6 @@ requires-python = ">=3.9"
 license = "MIT"
 dependencies = [
 	"jaraco.text",
-	"more_itertools",
 ]
 dynamic = ["version"]
 

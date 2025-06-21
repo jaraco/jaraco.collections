@@ -10,8 +10,6 @@ import re
 from collections.abc import Container, Iterable, Mapping
 from typing import TYPE_CHECKING, Any, Callable, TypeVar, Union, overload
 
-from more_itertools import consume
-
 import jaraco.text
 
 if TYPE_CHECKING:
@@ -1104,4 +1102,4 @@ def set_defaults(target: dict[str, object], **defaults) -> None:
     >>> target
     {'a': 1, 'c': 3, 'b': 2}
     """
-    consume(itertools.starmap(target.setdefault, defaults.items()))
+    target.update(Mask(target.__contains__, defaults))
