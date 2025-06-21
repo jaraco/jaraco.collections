@@ -10,6 +10,8 @@ import re
 from collections.abc import Container, Iterable, Mapping
 from typing import TYPE_CHECKING, Any, Callable, TypeVar, Union, overload
 
+from more_itertools import consume
+
 import jaraco.text
 
 if TYPE_CHECKING:
@@ -1089,3 +1091,17 @@ class WeightedLookup(RangeMap):
         lower, upper = self.bounds()
         selector = random.random() * upper
         return self[selector]
+
+
+def set_defaults(target: dict[str, object], **defaults) -> None:
+    """
+    Sets values on target in source not already in target.
+
+    Like :meth:`dict.setdefault`, but applies to all keys.
+
+    >>> target = dict(a=1, c=3)
+    >>> set_defaults(target, b=2, c=4)
+    >>> target
+    {'a': 1, 'c': 3, 'b': 2}
+    """
+    consume(itertools.starmap(target.setdefault, defaults.items()))
