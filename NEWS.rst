@@ -1,3 +1,12 @@
+v5.2.0
+======
+
+Features
+--------
+
+- Added set_defaults function.
+
+
 v5.1.1
 ======
 
