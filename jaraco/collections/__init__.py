@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import bisect
 import collections.abc
 import copy
 import functools
@@ -227,6 +228,61 @@ class RangeMap(dict[_RangeMapKT, _VT]):
         dict.__init__(self, source)
         self.sort_params = sort_params
         self.match = key_match_comparator
+        self._sorted_keys: list[_RangeMapKT] | None = None
+        self._ascending_keys: list[_RangeMapKT] | None = None
+
+    def _invalidate_sorted_keys(self):
+        self._sorted_keys = None
+        self._ascending_keys = None
+
+    def __setitem__(self, key, value):
+        dict.__setitem__(self, key, value)
+        self._invalidate_sorted_keys()
+
+    def __delitem__(self, key):
+        dict.__delitem__(self, key)
+        self._invalidate_sorted_keys()
+
+    def clear(self):
+        dict.clear(self)
+        self._invalidate_sorted_keys()
+
+    def pop(self, key, *args):
+        result = dict.pop(self, key, *args)
+        self._invalidate_sorted_keys()
+        return result
+
+    def popitem(self):
+        result = dict.popitem(self)
+        self._invalidate_sorted_keys()
+        return result
+
+    def setdefault(self, key, default=None):
+        result = dict.setdefault(self, key, default)
+        self._invalidate_sorted_keys()
+        return result
+
+    def update(self, *args, **kwargs):
+        dict.update(self, *args, **kwargs)
+        self._invalidate_sorted_keys()
+
+    def __ior__(  # type: ignore[override,misc]
+        self,
+        other: SupportsKeysAndGetItem[_RangeMapKT, _VT]
+        | Iterable[tuple[_RangeMapKT, _VT]],
+    ) -> Self:
+        result = dict.__ior__(self, other)
+        self._invalidate_sorted_keys()
+        return result
+
+    def _get_sorted_keys(self):
+        if self._sorted_keys is None:
+            self._sorted_keys = sorted(self.keys(), **self.sort_params)
+            if self.sort_params.get('reverse', False):
+                self._ascending_keys = list(reversed(self._sorted_keys))
+            else:
+                self._ascending_keys = self._sorted_keys
+        return self._sorted_keys
 
     @classmethod
     def left(
@@ -240,12 +296,20 @@ class RangeMap(dict[_RangeMapKT, _VT]):
         )
 
     def __getitem__(self, item: _RangeMapKT) -> _VT:
-        sorted_keys = sorted(self.keys(), **self.sort_params)
+        sorted_keys = self._get_sorted_keys()
         if isinstance(item, RangeMap.Item):
             result = self.__getitem__(sorted_keys[item])
         else:
-            key = self._find_first_match_(sorted_keys, item)
-            result = dict.__getitem__(self, key)
+            key = item
+            if self.match in (operator.le, operator.ge):
+                try:
+                    result = dict.__getitem__(self, item)
+                except (KeyError, TypeError):
+                    key = self._find_first_match_(sorted_keys, item)
+                    result = dict.__getitem__(self, key)
+            else:
+                key = self._find_first_match_(sorted_keys, item)
+                result = dict.__getitem__(self, key)
             if result is RangeMap.undefined_value:
                 raise KeyError(key)
         return result
@@ -268,6 +332,35 @@ class RangeMap(dict[_RangeMapKT, _VT]):
     def _find_first_match_(
         self, keys: Iterable[_RangeMapKT], item: _RangeMapKT
     ) -> _RangeMapKT:
+        if keys is self._sorted_keys and self._ascending_keys is not None:
+            key = self.sort_params.get('key')
+            if key is None:
+                reverse = self.sort_params.get('reverse', False)
+
+                if not reverse and self.match is operator.le:
+                    index = bisect.bisect_left(  # type: ignore[type-var]
+                        self._ascending_keys, item
+                    )
+                elif not reverse and self.match is operator.lt:
+                    index = bisect.bisect_right(  # type: ignore[type-var]
+                        self._ascending_keys, item
+                    )
+                elif reverse and self.match is operator.ge:
+                    index = bisect.bisect_right(  # type: ignore[type-var]
+                        self._ascending_keys, item
+                    ) - 1
+                elif reverse and self.match is operator.gt:
+                    index = bisect.bisect_left(  # type: ignore[type-var]
+                        self._ascending_keys, item
+                    ) - 1
+                else:
+                    index = None
+
+                if index is not None:
+                    if 0 <= index < len(self._ascending_keys):
+                        return self._ascending_keys[index]
+                    raise KeyError(item)
+
         is_match = functools.partial(self.match, item)
         matches = filter(is_match, keys)
         try:
@@ -276,7 +369,7 @@ class RangeMap(dict[_RangeMapKT, _VT]):
             raise KeyError(item) from None
 
     def bounds(self) -> tuple[_RangeMapKT, _RangeMapKT]:
-        sorted_keys = sorted(self.keys(), **self.sort_params)
+        sorted_keys = self._get_sorted_keys()
         return (sorted_keys[RangeMap.first_item], sorted_keys[RangeMap.last_item])
 
     # some special values for the RangeMap

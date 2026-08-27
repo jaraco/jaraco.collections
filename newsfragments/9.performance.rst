@@ -1,0 +1,1 @@
+Use binary search and cache sorted range keys for faster ``RangeMap`` lookups.
