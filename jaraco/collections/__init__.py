@@ -815,7 +815,7 @@ class FrozenDict(collections.abc.Mapping, collections.abc.Hashable):
 
     # Hashable
     def __hash__(self):
-        return hash(tuple(sorted(self.__data.items())))
+        return hash(frozenset(self.__data.items()))
 
     # Mapping
     def __iter__(self):
