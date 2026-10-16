@@ -1,3 +1,5 @@
+import pytest
+
 from jaraco import collections
 
 
@@ -25,3 +27,11 @@ def test_always_lower_keys_dict():
     assert "{'a': 1}" in d
     assert 3 in d
     assert d[3] == d['3'] == 'three'
+
+
+def test_freezable_default_dict_without_factory_raises_keyerror():
+    d = collections.FreezableDefaultDict()
+    d.freeze()
+
+    with pytest.raises(KeyError, match="'missing'"):
+        d['missing']
