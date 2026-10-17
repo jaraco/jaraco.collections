@@ -7,8 +7,8 @@ import itertools
 import operator
 import random
 import re
-from collections.abc import Container, Iterable, Mapping
-from typing import TYPE_CHECKING, Any, Callable, TypeVar, Union, overload
+from collections.abc import Callable, Container, Iterable, Mapping
+from typing import TYPE_CHECKING, Any, TypeVar, overload
 
 import jaraco.text
 
@@ -27,7 +27,7 @@ else:
 _T = TypeVar('_T')
 _VT = TypeVar('_VT')
 
-_Matchable = Union[Callable, Container, Iterable, re.Pattern]
+_Matchable = Callable | Container | Iterable | re.Pattern
 
 
 def _dispatch(obj: _Matchable) -> Callable:
@@ -132,7 +132,7 @@ def dict_map(function, dictionary):
     >>> dict_map(lambda x: x+1, dict(a=1, b=2))
     {'a': 2, 'b': 3}
     """
-    return dict((key, function(value)) for key, value in dictionary.items())
+    return {key: function(value) for key, value in dictionary.items()}
 
 
 class RangeMap(dict[_RangeMapKT, _VT]):
@@ -558,7 +558,7 @@ def invert_map(map):
     ...
     ValueError: Key conflict in inverted mapping
     """
-    res = dict((v, k) for k, v in map.items())
+    res = {v: k for k, v in map.items()}
     if not len(res) == len(map):
         raise ValueError('Key conflict in inverted mapping')
     return res
@@ -1086,7 +1086,7 @@ class WeightedLookup(RangeMap):
         super().__init__(zip(indexes, raw.keys()), key_match_comparator=operator.lt)
 
     def random(self):
-        lower, upper = self.bounds()
+        _lower, upper = self.bounds()
         selector = random.random() * upper
         return self[selector]
 
