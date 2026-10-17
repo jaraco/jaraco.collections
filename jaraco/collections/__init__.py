@@ -367,8 +367,9 @@ class KeyTransformingDict(dict):
         Given a key, return the actual key stored in self that matches.
         Raise KeyError if the key isn't found.
         """
+        transformed_key = self.transform_key(key)
         try:
-            return next(e_key for e_key in self.keys() if e_key == key)
+            return next(e_key for e_key in self.keys() if e_key == transformed_key)
         except StopIteration as err:
             raise KeyError(key) from err
 
