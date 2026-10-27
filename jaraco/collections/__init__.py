@@ -338,6 +338,14 @@ class KeyTransformingDict(dict):
         key = self.transform_key(key)
         super().__setitem__(key, val)
 
+    def update(self, *args, **kwargs):
+        for key, value in dict(*args, **kwargs).items():
+            self[key] = value
+
+    def __ior__(self, other):  # type: ignore[misc] # dict.__or__ returns a plain dict
+        self.update(other)
+        return self
+
     def __getitem__(self, key):
         key = self.transform_key(key)
         return super().__getitem__(key)
