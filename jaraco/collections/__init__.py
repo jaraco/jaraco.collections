@@ -737,9 +737,12 @@ class BijectiveMap(dict):
         return super().__len__() // 2
 
     def pop(self, key, *args, **kwargs):
+        if key not in self:
+            return super().pop(key, *args, **kwargs)
         mirror = self[key]
+        result = super().pop(key, *args, **kwargs)
         super().__delitem__(mirror)
-        return super().pop(key, *args, **kwargs)
+        return result
 
     def update(self, *args, **kwargs):
         # build a dictionary using the default constructs
