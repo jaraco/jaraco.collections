@@ -748,6 +748,22 @@ class BijectiveMap(dict):
         for item in d.items():
             self.__setitem__(*item)
 
+    def setdefault(self, key, default=None):
+        if key not in self:
+            self[key] = default
+        return self[key]
+
+    def popitem(self):
+        if not self:
+            raise KeyError('popitem(): dictionary is empty')
+        key = next(reversed(self))
+        return key, self.pop(key)
+
+    # Like dict.__ior__, also accept pairs, unlike dict.__or__.
+    def __ior__(self, other: Any) -> Self:  # type: ignore[misc]
+        self.update(other)
+        return self
+
 
 class FrozenDict(collections.abc.Mapping, collections.abc.Hashable):
     """
