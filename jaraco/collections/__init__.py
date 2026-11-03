@@ -1079,7 +1079,9 @@ class WeightedLookup(RangeMap):
     """
 
     def __init__(self, *args, **kwargs):
-        raw = dict(*args, **kwargs)
+        raw = {
+            key: weight for key, weight in dict(*args, **kwargs).items() if weight != 0
+        }
 
         # allocate keys by weight
         indexes = map(Accumulator(), raw.values())
