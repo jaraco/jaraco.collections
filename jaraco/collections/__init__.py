@@ -24,6 +24,7 @@ else:
     # but _RangeMapKT is used in RangeMap's superclass' type parameters
     _RangeMapKT = TypeVar('_RangeMapKT')
 
+_KT = TypeVar('_KT')
 _T = TypeVar('_T')
 _VT = TypeVar('_VT')
 
@@ -125,7 +126,7 @@ class Mask(Projection):
         self._match = lambda key, orig=self._match: not orig(key)
 
 
-def dict_map(function, dictionary):
+def dict_map(function: Callable[[_VT], _T], dictionary: Mapping[_KT, _VT]) -> dict[_KT, _T]:
     """
     Return a new dict with function applied to values of dictionary.
 
@@ -293,7 +294,7 @@ def __identity(x):
     return x
 
 
-def sorted_items(d, key=__identity, reverse=False):
+def sorted_items(d: Mapping[_KT, _VT], key: Callable[[_KT], Any] = __identity, reverse: bool = False) -> list[tuple[_KT, _VT]]:
     """
     Return the items of the dictionary sorted by the keys.
 
