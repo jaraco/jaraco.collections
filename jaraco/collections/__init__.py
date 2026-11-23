@@ -450,7 +450,7 @@ class FoldedCaseKeyedDict(KeyTransformingDict):
 
     @staticmethod
     def transform_key(key):
-        return jaraco.text.FoldedCase(key)
+        return jaraco.text.FoldedCase(key) if isinstance(key, str) else key
 
 
 class DictAdapter:
