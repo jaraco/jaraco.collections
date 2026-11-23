@@ -25,3 +25,22 @@ def test_always_lower_keys_dict():
     assert "{'a': 1}" in d
     assert 3 in d
     assert d[3] == d['3'] == 'three'
+
+
+def test_frozen_dict_hash_with_unorderable_keys():
+    first = collections.FrozenDict({1: 'integer', 'name': 'string'})
+    reverse = collections.FrozenDict({'name': 'string', 1: 'integer'})
+
+    indexed = {first: 'stored'}
+
+    assert indexed[reverse] == 'stored'
+    assert len({first, reverse}) == 1
+
+
+def test_frozen_dict_hash_is_independent_of_partially_ordered_keys():
+    pairs = [(frozenset({1}), 'one'), (frozenset({2}), 'two')]
+    first = collections.FrozenDict(pairs)
+    reverse = collections.FrozenDict(reversed(pairs))
+
+    assert first == reverse
+    assert hash(first) == hash(reverse)
