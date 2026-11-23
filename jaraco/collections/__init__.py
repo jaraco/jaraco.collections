@@ -1029,10 +1029,14 @@ class FreezableDefaultDict(collections.defaultdict):
     """
 
     def __missing__(self, key):
-        return getattr(self, '_frozen', super().__missing__)(key)
+        if not getattr(self, '_frozen', False):
+            return super().__missing__(key)
+        if self.default_factory is None:
+            raise KeyError(key)
+        return self.default_factory()
 
     def freeze(self):
-        self._frozen = lambda key: self.default_factory()
+        self._frozen = True
 
 
 class Accumulator:
