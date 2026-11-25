@@ -242,12 +242,12 @@ class RangeMap(dict[_RangeMapKT, _VT]):
     def __getitem__(self, item: _RangeMapKT) -> _VT:
         sorted_keys = sorted(self.keys(), **self.sort_params)
         if isinstance(item, RangeMap.Item):
-            result = self.__getitem__(sorted_keys[item])
+            key = sorted_keys[item]
         else:
             key = self._find_first_match_(sorted_keys, item)
-            result = dict.__getitem__(self, key)
-            if result is RangeMap.undefined_value:
-                raise KeyError(key)
+        result = dict.__getitem__(self, key)
+        if result is RangeMap.undefined_value:
+            raise KeyError(key)
         return result
 
     @overload  # type: ignore[override] # Signature simplified over dict and Mapping
